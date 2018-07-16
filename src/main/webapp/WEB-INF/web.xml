@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                             http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+  <jsp-config>
+    <jsp-property-group>
+      <url-pattern>*.html</url-pattern>
+      <el-ignored>true</el-ignored>
+      <page-encoding>UTF-8</page-encoding>
+    </jsp-property-group>
+    <!-- 去掉jsp指令/jstl标签造成的空白行 -->
+    <jsp-property-group>
+      <url-pattern>*.jsp</url-pattern>
+      <trim-directive-whitespaces>true</trim-directive-whitespaces>
+    </jsp-property-group>
+  </jsp-config>
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:config/blog-servlet.xml</param-value>
+  </context-param>
+
+  <!-- 系统启动监听器 -->
+  <listener>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- Servlet规范要求表单数据可用于POST，但没要求PUT和PATCH -->
+  <filter>
+    <filter-name>HttpPutFormContentFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+    <async-supported>true</async-supported>
+  </filter>
+
+
+  <filter-mapping>
+    <filter-name>HttpPutFormContentFilter</filter-name>
+    <servlet-name>CylBlog</servlet-name>
+  </filter-mapping>
+
+  <servlet>
+    <servlet-name>CylBlog</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:config/blog-servlet.xml</param-value>
+    </init-param>
+  </servlet>
+
+
+
+  <servlet-mapping>
+    <servlet-name>CylBlog</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <!-- 缺省首页 -->
+  <welcome-file-list>
+    <welcome-file>/</welcome-file>
+  </welcome-file-list>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error/404.html</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/500.html</location>
+  </error-page>
+
+</web-app>
