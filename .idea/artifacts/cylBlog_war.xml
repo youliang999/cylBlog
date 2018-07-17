@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="cylBlog:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="cylBlog.war">
-      <element id="artifact" artifact-name="cylBlog:war exploded" />
-    </root>
-  </artifact>
-</component>

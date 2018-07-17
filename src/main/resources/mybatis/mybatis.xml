@@ -6,7 +6,7 @@
         <typeAlias alias="Blog" type="com.cyl.blog.controller.index.model.Blog"/>
         <typeAlias alias="BlogVo" type="com.cyl.blog.controller.index.model.BlogVo"/>
     </typeAliases>
-    <mappers>
-        <mapper resource="mappers/BlogMapper.xml"/>
-    </mappers>
+    <!--<mappers>-->
+        <!--<mapper resource="mappers/BlogMapper.xml"/>-->
+    <!--</mappers>-->
 </configuration>

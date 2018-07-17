@@ -12,8 +12,7 @@
     <!-- 启用注解 -->
     <context:annotation-config/>
     <context:component-scan base-package="com.cyl.blog.controller"/>
-    <!--服务-->
-    <context:component-scan base-package="com.cyl.blog.service"/>
+
     <mvc:annotation-driven enable-matrix-variables="false">
         <mvc:message-converters register-defaults="true">
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
@@ -31,11 +30,6 @@
         <!--  可不设置，使用默认的超时时间,当前为5分钟 -->
         <mvc:async-support default-timeout="300000" />
     </mvc:annotation-driven>
-
-
-
-
-
 
     <!--<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">-->
         <!--<property name="contentNegotiationManager">-->
@@ -111,49 +105,5 @@
 
     <bean id="freemarkerConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="classpath:freemarker.properties"/>
-    </bean>
-
-    <context:property-placeholder location="classpath:dbconfig.properties" />
-
-    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-        <property name="driverClass" value="${driverClassName}" />
-        <property name="jdbcUrl" value="${url}" />
-        <property name="username" value="root" />
-        <property name="password" value="root" />
-        <property name="maxConnectionsPerPartition" value="30"/>
-        <property name="minConnectionsPerPartition" value="10"/>
-        <property name="partitionCount" value="3"/>
-        <property name="acquireIncrement" value="5"/>
-        <property name="statementsCacheSize" value="100"/>
-    </bean>
-
-
-    <!--mysql-->
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <!-- 使用MapperScannerConfigurer和SqlSessionFactoryBean无法lazy-init -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="configLocation" value="classpath:mybatis/mybatis.xml" />
-        <property name="plugins">
-            <array>
-            </array>
-        </property>
-    </bean>
-
-    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg ref="sqlSessionFactory" />
-    </bean>
-
-    <!-- 配置Jdbc模板 -->
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource"></property>
-    </bean>
-
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.cyl.blog.service.mapper" />
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
 </beans>

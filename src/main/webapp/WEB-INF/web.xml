@@ -4,6 +4,17 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
+
+  <!--&lt;!&ndash;默认的首页&ndash;&gt;-->
+  <!--<welcome-file-list>-->
+    <!--<welcome-file>index.html</welcome-file>-->
+    <!--<welcome-file>index.htm</welcome-file>-->
+    <!--<welcome-file>index.jsp</welcome-file>-->
+    <!--<welcome-file>default.html</welcome-file>-->
+    <!--<welcome-file>default.htm</welcome-file>-->
+    <!--<welcome-file>default.jsp</welcome-file>-->
+  <!--</welcome-file-list>-->
+
   <jsp-config>
     <jsp-property-group>
       <url-pattern>*.html</url-pattern>
@@ -20,6 +31,8 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:config/blog-servlet.xml</param-value>
+    <param-value>classpath:config/spring-dao.xml</param-value>
+    <param-value>classpath:config/spring-service.xml</param-value>
   </context-param>
 
   <!-- 系统启动监听器 -->
