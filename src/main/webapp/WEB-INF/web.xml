@@ -30,9 +30,9 @@
 
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:config/blog-servlet.xml</param-value>
-    <param-value>classpath:config/spring-dao.xml</param-value>
-    <param-value>classpath:config/spring-service.xml</param-value>
+    <param-value>classpath*:config/blog-servlet.xml</param-value>
+    <!--<param-value>classpath*:solr-config/*.xml</param-value>-->
+    <param-value>classpath*:config/spring-service.xml</param-value>
   </context-param>
 
   <!-- 系统启动监听器 -->
@@ -56,6 +56,12 @@
     <servlet-name>CylBlog</servlet-name>
   </filter-mapping>
 
+  <filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>com.cyl.blog.filter.LoginFilter</filter-class>
+    <async-supported>true</async-supported>
+  </filter>
+
   <servlet>
     <servlet-name>CylBlog</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -66,13 +72,32 @@
       <param-value>classpath:config/blog-servlet.xml</param-value>
     </init-param>
   </servlet>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <servlet-name>CylBlog</servlet-name>
+  </filter-mapping>
 
 
+   <!--激活Tomcat的defaultServlet来处理静态文件 -->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/resource/*</url-pattern>
+  </servlet-mapping>
+
+  <!--<servlet-mapping>-->
+    <!--<servlet-name>default</servlet-name>-->
+    <!--<url-pattern>*.css</url-pattern>-->
+  <!--</servlet-mapping>-->
 
   <servlet-mapping>
     <servlet-name>CylBlog</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+
+
+
+
+
 
   <!-- 缺省首页 -->
   <welcome-file-list>

@@ -3,8 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias alias="Blog" type="com.cyl.blog.controller.index.model.Blog"/>
+        <typeAlias alias="Blog" type="com.cyl.blog.entity.Blog"/>
         <typeAlias alias="BlogVo" type="com.cyl.blog.controller.index.model.BlogVo"/>
+        <typeAlias alias="Option" type="com.cyl.blog.entity.Option"/>
+        <typeAlias alias="Category" type="com.cyl.blog.entity.Category" />
+        <typeAlias alias="User" type="com.cyl.blog.entity.User"/>
+        <typeAlias alias="CommentVO" type="com.cyl.blog.vo.CommentVO" />
+        <typeAlias alias="Comment" type="com.cyl.blog.entity.Comment" />
+        <typeAlias alias="Tag" type="com.cyl.blog.entity.Tag"/>
     </typeAliases>
     <!--<mappers>-->
         <!--<mapper resource="mappers/BlogMapper.xml"/>-->

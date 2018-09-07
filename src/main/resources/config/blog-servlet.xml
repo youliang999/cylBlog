@@ -12,7 +12,8 @@
     <!-- 启用注解 -->
     <context:annotation-config/>
     <context:component-scan base-package="com.cyl.blog.controller"/>
-
+    <context:component-scan base-package="com.cyl.blog.backend.controller"/>
+    <context:component-scan base-package="com.cyl.blog.backend.helper"/>
     <mvc:annotation-driven enable-matrix-variables="false">
         <mvc:message-converters register-defaults="true">
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
@@ -30,7 +31,7 @@
         <!--  可不设置，使用默认的超时时间,当前为5分钟 -->
         <mvc:async-support default-timeout="300000" />
     </mvc:annotation-driven>
-
+    <mvc:default-servlet-handler />
     <!--<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">-->
         <!--<property name="contentNegotiationManager">-->
             <!--<bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">-->
@@ -81,8 +82,8 @@
             <value>org.springframework.web.servlet.view.freemarker.FreeMarkerView</value>
         </property>
     </bean>
-
-
+    <mvc:annotation-driven/>
+    <mvc:resources location="/WEB-INF/resource/" mapping="resource/**"/>
     <!-- freemarker的配置 -->
     <bean id="freemarkerConfig"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
@@ -106,4 +107,34 @@
     <bean id="freemarkerConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="classpath:freemarker.properties"/>
     </bean>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+        <mvc:mapping path="/backend/**"/>
+        <bean class="com.cyl.blog.interceptors.UserIsLoginInterceptor">
+            <property name="excludeUrlPatterns">
+                <list>
+                    <value>/backend/login</value>
+                    <value>/backend/loginsubmit</value>
+                    <value>/backend/logout</value>
+                    <value>/</value>
+                </list>
+            </property>
+        </bean>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.cyl.blog.interceptors.SessionBindInterceptor">
+                <property name="excludeUrlPatterns">
+                    <list>
+                        <value>/backend/login</value>
+                        <value>/backend/loginsubmit</value>
+                        <value>/backend/logout</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+
+    </mvc:interceptors>
 </beans>

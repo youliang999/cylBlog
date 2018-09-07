@@ -1,0 +1,127 @@
+a,a:hover,a:focus{text-decoration: none;outline: medium none;}
+h1, h2, h3, h4, h5, h6,p{margin: 0;padding: 0;}
+
+/**************  login  ************/
+#login{width:500px;margin:0px auto;margin-top: 150px;}
+#login #logo{text-align: center;float: left;padding-top: 10px;width: 200px;}
+#login p{padding: 12px 12px 12px 0;}
+#login .message{background-color: #ffffe0;border:1px solid #e6db55; border-radius: 3px;text-align: center;margin-bottom: 10px;}
+#login #loginform{background-color:#fff;border: 1px solid #e5e5e5;font-weight: normal;padding:24px;
+    box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);margin-left: 200px;}
+
+.icon{padding-right: 0.75em;}
+#sidebar{overflow-x: hidden;padding: 20px;border-right: 1px solid #cccccc;}
+
+
+/****************** side-menu  **************/
+ul{list-style: none outside none;padding: 0;}
+.side-menu a{display: block;}
+.side-menu ul a:hover{background-color: #d2d2dd;}
+.side-menu ul a.last{border-bottom: 1px solid #c8c8cb;}
+.side-menu i.left, .side-menu i.right{display: inline-block;  line-height: 2.25em;padding-right: 0.75em;}
+.side-menu i.right{float: right;}
+.side-menu .nav-header{background: rgb(239, 239, 240);color: #444;
+    border-bottom: 1px solid #c8c8cb;border-left: medium none;
+    font-size: 1em;font-weight: normal;
+    line-height: 2.5em;height: 40px;
+    margin-bottom: 0;padding: 0.25em 0.25em 0.25em 1em;}
+/* .side-menu .sub-menu{display: none;} */
+.side-menu .sub-menu a{padding: 0.5em 1em; color: #222;line-height: 20px;}
+
+.header{margin-top: 20px;}
+.header small{font-size: 12px;margin-left: 10px;}
+
+
+.databox{background-color: #f5f5f5;height: 80px;width: 100%;border-radius: 4px;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);}
+.sybomol_red{background-color: #f16868;text-align: center;border-radius: 4px 0 0 4px;}
+.sybomol_terques{background-color: #6ccac9;text-align: center;border-radius: 4px 0 0 4px;}
+.sybomol_blue{background-color: #57c8f2;text-align: center;border-radius: 4px 0 0 4px;}
+.sybomol_yellow{background-color: #f8d347;text-align: center;border-radius: 4px 0 0 4px;}
+.sybomol{float: left;height: 100%;width: 45%;}
+.sybomol i{margin-top: 35px;}
+.value{color: #666;float: left;font-size: 35px;height: 100%;text-align: center;width: 55%;}
+.value p{font-size: 14px;}
+
+/***************  后台首页   **************/
+ul.ul-group li{padding: 5px 0;}
+
+ul.table-nav{float: left;font-size: 12px;font-family: sans-serif;}
+ul.table-nav li{ float: left;display: inline-block;}
+ul.table-nav li a, ul.table-nav li span{line-height: 2;padding: 0.2em;}
+ul.table-nav li span{color:#999;font-weight: normal;}
+ul.table-nav li a.active{color: #000;font-weight: bold;}
+
+/**********  数据table表格 **************/
+.list-table{border-color: #dfdfdf;border-radius: 3px;border-style: solid;border-width: 1px;font-size: 12px;}
+.list-table thead th:first-of-type, .list-table thead th:last-of-type{ border-top-left-radius: 3px;}
+.list-table a,.list-table thead tr th{color:#21759b;}
+.list-table thead tr th{ font-weight: normal;border-bottom: 1px solid #ddd;background: linear-gradient(to top, #ececec, #f9f9f9) repeat scroll 0 0 #f1f1f1;}
+.list-table th.center,.list-table td.center{text-align: center;}
+.list-table td span.pointer{cursor: pointer;}
+
+/***************  row-action ***************/
+.list-table tr:hover .row-action{visibility: visible;}
+.list-table .row-action{padding: 2px 0 0;visibility: hidden;}
+
+#upload-table .filename{padding:4px 7px 2px;}
+#upload-table .fileformat{margin: 2px 0 9px 0;}
+
+/**************** fast-edit  ************/
+#edit-row{display: none;}
+#edit-row div{float: left;font-size: 12px;padding: 0 6px;}
+#edit-row h5{margin-bottom: 0.5em;}
+#edit-row span{display: block;margin: 0.2em 0;clear: both;}
+#edit-row span label{width: 5em;display: block;float: left;line-height: 1.8em;font-weight: normal;}
+#edit-row input[type="text"], #edit-row textarea{width: 83%;outline: 0 none;border-radius: 3px;background-color: #fff; border:1px solid #dfdfdf;}
+#edit-row textarea{height: 4em;width: 95%}
+#edit-row input[type="text"]:focus, #edit-row textarea:focus{border-color: #aaa;}
+#edit-row input[type="radio"]{margin-right: 0.5em;}
+.edit-col-left{width: 45%;}
+.edit-col-center{width: 24%;}
+#edit-row ul{border:1px solid #ddd;background-color: #fff;padding: 0 5px;}
+#edit-row ul li{margin: 0.2em 0;}
+.edit-col-right{width: 30%;}
+#edit-row p{padding: 1em 0.5em 0 0.5em;clear: both;}
+
+/****************  编辑器  ************/
+#editor-nav li a{border-bottom-width: 0;font-size: 10px;padding: 7px 15px;}
+#editor-txt textarea{border: 1px solid #d4d4d4;border-radius: 4px;resize:none;}
+
+/************  form  ****************/
+form.text-left label{font-weight: normal;text-align: left;padding-top: 7px;padding-left: 40px;}
+form.text-left .help-block{margin-bottom: 0px;}
+
+img.avatar{float: left;margin-right: 10px;margin-top: 1px;}
+
+/************ uploader文件上传 ***************/
+#uploader .tip{font-size: 12px;letter-spacing: 1px;color: #bbb;font-weight: bold;margin:0 0 12px 12px;}
+
+#uploader .upload-list{border: 3px dashed #e6e6e6;margin: 10px;padding: 15px;}
+.upload-item{border: 1px solid #dfdfdf;min-height: 36px;width: 100%;margin-top: -1px;}
+.upload-item img{margin: 2px;max-height: 32px;max-width: 40px;}
+.upload-item .upload-item-name{line-height: 36px;padding-left: 10px;display: inline-block;width: 15%;}
+.upload-item a{float: right;margin-right: 15px;line-height: 36px;}
+.upload-item .progress{display: inline-block;vertical-align: middle;width: 70%;margin:0 0 0 15px;}
+
+#uploader .placeholder{background-image:url("../img/upload.png");background-position:center 93px;background-color:transparent;background-repeat:no-repeat;
+    color: #cccccc;font-size: 18px;min-height: 350px;padding-top: 178px;text-align: center;}
+#uploader #status-bar{border-top: 1px solid #dadada;height: 63px;line-height: 63px;padding: 0 20px;position: relative;}
+#status-bar .info{color: #666666;display: inline-block;font-size: 14px;}
+#status-bar .btns{line-height: 40px;position: absolute;right: 20px;top: 10px;}
+#status-bar #append-picker{display: inline-block;float: left;}
+#status-bar #append-picker .webuploader-pick, #status-bar .uploadBtn{
+  background-color: #fff;color: #565656;cursor: pointer;
+  border: 1px solid #cfcfcf;border-radius: 3px;
+  display: inline-block;float: left;
+  font-size: 14px;margin-left: 10px;padding: 0 18px;}
+#status-bar .uploadBtn{background-color: #00b7ee;color: #fff;border-color: transparent;}
+
+
+/**************** pager **********/
+#pager{float: right;padding-right: 15px;}
+#pager ul{margin: 0;}
+.page-info{line-height: 25px;padding-top: 5px;}
+
+.footer{position: absolute;bottom: 0;width: 100%;height: 60px;background-color: #f5f5f5;}
+.footer .text-muted{margin: 20px 0;}
+.footer > .container {padding-right: 15px;padding-left: 15px;}

@@ -1,6 +1,6 @@
 package com.cyl.blog.service.mapper;
 
-import com.cyl.blog.controller.index.model.Blog;
+import com.cyl.blog.entity.Blog;
 
 import java.util.List;
 import java.util.Map;
@@ -10,9 +10,27 @@ import java.util.Map;
  */
 public interface BlogMapper extends BaseMapper {
 
-    Blog loadById(String postid);
-
     List<Blog> getBlogs(Map<String, Object> map);
 
+    List<Blog> getAllBlogs(Map<String, Object> map);
+
+    Blog getBlogById(String id);
+
+    List<Blog> getBlogsByIds(List<String> ids);
+
     int countBlog();
+
+    String getNextBid(String bid);
+
+    String getPrevBid(String bid);
+
+    List<Blog> getRecentBlogs(int limit);
+
+    List<Blog> getBlogByTitle(String title);
+
+    List<String> getBlogVosByTag(String tagName);
+
+    int countBlogIdsByCategory(List<String> categoryIds);
+
+    List<String> getBlogIdsByCategory(Map<String, Object> data);
 }

@@ -1,43 +1,30 @@
 package com.cyl.blog.service;
 
 import com.cyl.blog.controller.index.model.BaseBlog;
-import com.cyl.blog.service.mapper.BaseMapper;
 import com.cyl.blog.plugin.PageIterator;
+import com.cyl.blog.service.mapper.BaseMapper;
 
 import java.util.List;
 
 /**
- * Created by youliang.cheng on 2018/7/11.
+ * Created by youliang.cheng on 2018/7/30.
  */
-public abstract class BlogBaseService{
-    public <T extends BaseBlog> int insert(T t){
-        return getMapper().insert(t);
-    }
+public interface BlogBaseService {
 
-    public <T extends BaseBlog> T loadById(String id){
-        return getMapper().loadById(id);
-    }
+        <T extends BaseBlog> int insert(T t);
 
-    public <T> void list(PageIterator<T> model){
-//        List<T> result = getMapper().list(model);
-//        model.setData(result);
-    }
 
-    public <T> List<T> list(){
-        return getMapper().list();
-    }
+        <T extends BaseBlog> T loadById(String id);
 
-    public <T extends BaseBlog> int update(T t){
-        return getMapper().update(t);
-    }
+        <T> void list(PageIterator<T> model);
 
-    public int deleteById(String id){
-        return getMapper().deleteById(id);
-    }
+        <T> List<T> list();
 
-    public long count(){
-        return getMapper().count();
-    }
+        <T extends BaseBlog> int update(T t);
 
-    protected abstract BaseMapper getMapper();
-}
+        int deleteById(String id);
+
+        long count();
+
+        BaseMapper getMapper();
+    }

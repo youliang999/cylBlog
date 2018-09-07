@@ -23,6 +23,7 @@
         <property name="partitionCount" value="3"/>
         <property name="acquireIncrement" value="5"/>
         <property name="statementsCacheSize" value="100"/>
+        <property name="connectionTestStatement" value="select 1"/>
     </bean>
 
     <!-- 3.配置SqlSessionFactory对象 -->

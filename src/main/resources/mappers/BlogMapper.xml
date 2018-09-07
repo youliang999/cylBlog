@@ -4,15 +4,88 @@
 
 <mapper namespace="com.cyl.blog.service.mapper.BlogMapper">
 
-    <select id="loadById" parameterType="java.lang.String" resultType="BlogVo">
-        select * from post where id = #{id}
+    <select id="getNextBid" parameterType="java.lang.String" resultType="java.lang.String">
+        select id from post where type='post' and pstatus = 1  and createTime >
+        (select createTime from post where id=#{postid}) limit 1
+    </select>
+
+    <select id="getPrevBid" parameterType="java.lang.String" resultType="java.lang.String">
+        select id from post where type='post'  and pstatus = 1  and createTime &lt;
+        (select createTime from post where id=#{postid}) order by createTime desc limit 1
+    </select>
+
+    <select id="getRecentBlogs" parameterType="java.lang.Integer" resultType="Blog">
+        SELECT * from post where pstatus = 1 order by lastUpdate desc limit #{limit}
+    </select>
+
+    <select id="getBlogByTitle" parameterType="java.lang.String" resultType="Blog">
+        SELECT  * from post where title = #{title}
     </select>
 
     <select id="getBlogs" parameterType="Map" resultType="Blog">
-        SELECT * from post order by lastUpdate desc limit #{offset}, #{limit}
+        SELECT * from post where pstatus = 1 order by lastUpdate desc limit #{offset}, #{limit}
+    </select>
+
+    <select id="getAllBlogs" parameterType="Map" resultType="Blog">
+        SELECT * from post  order by lastUpdate desc limit #{offset}, #{limit}
+    </select>
+
+    <select id="getBlogById" parameterType="java.lang.String" resultType="Blog">
+        SELECT * from post  where id = #{id}
+    </select>
+
+    <select id="getBlogsByIds" parameterType="java.util.List" resultType="Blog">
+        SELECT * from post  where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 
     <select id="countBlog" resultType="java.lang.Integer">
-        SELECT count(1) from post
+        SELECT count(1) from post where pstatus = 1
     </select>
+
+    <select id="countBlogIdsByCategory" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT count(*) from post  where categoryid in
+        <foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getBlogIdsByCategory" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT id from post where categoryid in
+        <foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    
+    <!--base-->
+    <insert id="insert" parameterType="Blog">
+        insert into post(id,title,excerpt,content,type,parent,categoryid,pstatus,cstatus,ccount,rcount,createTime,creator, blog_type,lastUpdate)
+        values(#{id},#{title},#{excerpt},#{content, jdbcType=CLOB},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blogType},#{lastUpdate})
+    </insert>
+
+    <select id="loadById" parameterType="java.lang.String" resultType="Blog">
+        select * from post where id = #{id}
+    </select>
+
+    <select id="getlist" parameterType="Map" resultType="java.lang.String">
+        select id from post where pstatus = 1  order by lastUpdate desc limit #{offset}, #{limit}
+    </select>
+
+    <update id="deleteById" parameterType="java.lang.String">
+        UPDATE post set pstatus = -1 where id=#{id}
+    </update>
+
+    <update id="update" parameterType="Blog">
+        update post set title=#{title},excerpt=#{excerpt}, content=#{content, jdbcType=CLOB},parent=#{parent}, pstatus=#{pstatus},
+        <if test="categoryid!=null and categoryid!=''">
+            categoryid=#{categoryid},
+        </if>
+        cstatus=#{cstatus}, lastUpdate=#{lastUpdate}
+        where id=#{id}
+    </update>
+
+
+
 </mapper>

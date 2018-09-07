@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cyl.blog.service.mapper.TagMapper">
+   <!--<select id="list" resultType="JMap">-->
+      <!--select name, count(*) as count from tag group by name order by createTime desc-->
+   <!--</select>-->
+    <insert id="insert" parameterType="Tag">
+        insert into tag(id,name,postid,createTime) values
+        (#{id}, #{name}, #{postid}, #{createTime})
+    </insert>
+
+   <select id="getTagsByPost" parameterType="java.lang.String" resultType="java.lang.String">
+      select DISTINCT (name) from tag where postid=#{postid}
+   </select>
+    
+    <select id="getPostsByTag" parameterType="java.lang.String" resultType="java.lang.String">
+      SELECT postid from tag where name = #{name}
+    </select>
+
+    <select id="getPostsByTagLimit" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT postid from tag where name = #{name} limit #{offset}, #{limit}
+    </select>
+
+    <select id="getTags" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT DISTINCT(name) from tag order by createTime desc limit #{limit}
+    </select>
+
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT DISTINCT (name) from tag where postid = #{postid}
+    </select>
+
+    <!--<select id="getPostIdsByTags" parameterType="java.util.List" resultType="java.lang.Integer">-->
+        <!--SELECT-->
+    <!--</select>-->
+
+    <select id="countPostsByTag" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) from tag where name = #{name}
+    </select>
+   <insert id="insertBatch" parameterType="java.util.List">
+      insert into tag(id,name,postid,createTime) values
+      <foreach collection="list" item="item" separator=",">
+        (#{item.id}, #{item.name}, #{item.postid}, #{item.createTime})
+      </foreach>
+   </insert>
+
+   <delete id="deleteByPostid" parameterType="java.lang.String">
+     delete from tag where postid=#{postid}
+   </delete>
+
+   <delete id="deleteById"  parameterType="java.lang.String">
+    delete from tag where id=#{id}
+   </delete>
+</mapper>

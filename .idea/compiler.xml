@@ -6,11 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="cyl-blog-spider-task" />
         <module name="cylBlog" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="cylBlog" target="1.7" />
+      <module name="cyl-blog-spider-task" target="1.8" />
+      <module name="cyl-web-spider" target="1.7" />
+      <module name="cylBlog" target="1.8" />
+      <module name="sinaSpider" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

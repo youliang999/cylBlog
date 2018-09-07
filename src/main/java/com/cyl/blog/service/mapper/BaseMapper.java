@@ -22,7 +22,7 @@ public interface BaseMapper {
      */
     public <T> T loadById(String id);
 
-    public <T> List<T> list(Map<String, Object> map);
+    public <T> List<T> getlist(Map<String, Object> map);
 
     public <T> List<T> list();
 
