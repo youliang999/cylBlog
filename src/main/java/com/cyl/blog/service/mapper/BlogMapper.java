@@ -1,6 +1,7 @@
 package com.cyl.blog.service.mapper;
 
 import com.cyl.blog.entity.Blog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +34,7 @@ public interface BlogMapper extends BaseMapper {
     int countBlogIdsByCategory(List<String> categoryIds);
 
     List<String> getBlogIdsByCategory(Map<String, Object> data);
+
+
+    int addCcount(@Param("commentid") String commentid, @Param("count") int count);
 }

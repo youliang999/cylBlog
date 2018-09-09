@@ -40,4 +40,6 @@ public interface BlogService extends BlogBaseService{
 
     Blog getBlogById(String id);
 
+    int addCcount(String commentid, int count);
+
 }

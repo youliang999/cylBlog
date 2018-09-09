@@ -86,6 +86,9 @@
         where id=#{id}
     </update>
 
+    <update id="addCcount">
+        update post set ccount=ccount+#{count} where id = (select postid from comment where id=#{commentid} and status='approve')
+    </update>
 
 
 </mapper>

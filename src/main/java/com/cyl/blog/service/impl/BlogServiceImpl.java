@@ -297,4 +297,14 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     public Blog getBlogById(String id) {
         return blogMapper.getBlogById(id);
     }
+
+    /**
+     * 更改评论数
+     *
+     * @param commentid
+     * @param count
+     */
+    public int addCcount(String commentid, int count){
+        return blogMapper.addCcount(commentid, count);
+    }
 }

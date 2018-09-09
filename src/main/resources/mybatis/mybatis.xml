@@ -11,6 +11,9 @@
         <typeAlias alias="CommentVO" type="com.cyl.blog.vo.CommentVO" />
         <typeAlias alias="Comment" type="com.cyl.blog.entity.Comment" />
         <typeAlias alias="Tag" type="com.cyl.blog.entity.Tag"/>
+        <typeAlias alias="Upload" type="com.cyl.blog.backend.vo.Upload"/>
+        <typeAlias alias="UploadVO" type="com.cyl.blog.backend.vo.UploadVO"/>
+        <typeAlias alias="Link" type="com.cyl.blog.backend.vo.Link"/>
     </typeAliases>
     <!--<mappers>-->
         <!--<mapper resource="mappers/BlogMapper.xml"/>-->

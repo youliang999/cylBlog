@@ -14,12 +14,14 @@ public class JedisBaseOperationServiceImpl<K> implements RedisOperation {
 //    private final String name;
     private final Jedis jedisClient = JedisManager.instance.getJedis();
 
+
     @Override
     public String getName() {
         return this.jedisClient.clientGetname();
     }
 
     protected <R> R runInClient(JedisClientCallback<R> clientCallback){
+
         try {
             return clientCallback.doInClient(jedisClient);
         } catch (RuntimeException e) {

@@ -14,6 +14,7 @@
     <context:component-scan base-package="com.cyl.blog.controller"/>
     <context:component-scan base-package="com.cyl.blog.backend.controller"/>
     <context:component-scan base-package="com.cyl.blog.backend.helper"/>
+    <context:component-scan base-package="com.cyl.blog.backend.editor"/>
     <mvc:annotation-driven enable-matrix-variables="false">
         <mvc:message-converters register-defaults="true">
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
@@ -83,7 +84,9 @@
         </property>
     </bean>
     <mvc:annotation-driven/>
-    <mvc:resources location="/WEB-INF/resource/" mapping="resource/**"/>
+    <mvc:resources location="/resource/" mapping="resource/**"/>
+    <mvc:resources location="/blog/" mapping="blog/**"/>
+    <mvc:resources location="/error/" mapping="error/**"/>
     <!-- freemarker的配置 -->
     <bean id="freemarkerConfig"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
