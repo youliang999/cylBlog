@@ -1,6 +1,7 @@
 package com.cyl.blog.entity.solr;
 
 import com.cyl.blog.constants.BlogConstants;
+import com.cyl.blog.entity.Blog;
 import lombok.Data;
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -16,7 +17,7 @@ public class BlogIndex implements Serializable {
     static final String FIELD_ID = "id";
     static final String FIELD_TITLE = "title";
     static final String FIELD_EXCERPT = "excerpt";
-    static final String FIELD_CONTENT = "content";
+//    static final String FIELD_CONTENT = "content";
     static final String FIELD_TYPE = "type";
     static final String FIELD_PARENT = "parent";
     static final String FIELD_CATEGORYID = "categoryid";
@@ -37,8 +38,8 @@ public class BlogIndex implements Serializable {
     @Field(FIELD_EXCERPT)
     private String excerpt;
 
-    @Field(FIELD_CONTENT)
-    private String content;
+//    @Field(FIELD_CONTENT)
+//    private String content;
 
     @Field(FIELD_TYPE)
     private String type = BlogConstants.TYPE_POST;
@@ -69,4 +70,24 @@ public class BlogIndex implements Serializable {
 
     @Field(FIELD_LASTUPDATE)
     private Date lastUpdate;
+
+
+
+    public static BlogIndex fromEntity(Blog blog) {
+        BlogIndex index = new BlogIndex();
+        index.setId(Integer.valueOf(blog.getId()));
+        index.setTitle(blog.getTitle());
+        index.setExcerpt(blog.getExcerpt());
+        index.setType(blog.getType());
+        index.setParent(blog.getParent());
+        index.setCategoryid(blog.getCategoryid());
+        index.setPstatus(blog.getPstatus());
+        index.setCstatus(blog.getCstatus());
+        index.setCcount(blog.getCcount());
+        index.setRcount(blog.getRcount());
+        index.setCreateTime(blog.getCreateTime());
+        index.setCreator(blog.getCreator());
+        index.setLastUpdate(blog.getLastUpdate());
+        return index;
+    }
 }

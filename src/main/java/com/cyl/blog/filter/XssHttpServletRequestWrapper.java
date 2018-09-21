@@ -1,7 +1,5 @@
 package com.cyl.blog.filter;
 
-import org.springframework.web.util.HtmlUtils;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -44,7 +42,8 @@ class XssHttpServletRequestWrapper extends HttpServletRequestWrapper{
   }
 
   private String cleanXSS(String value){
-    return HtmlUtils.htmlEscape(value);
+//    return HtmlUtils.htmlEscape(value);
+    return value;
   }
 
 }

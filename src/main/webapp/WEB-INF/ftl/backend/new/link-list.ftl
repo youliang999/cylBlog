@@ -2,7 +2,7 @@
 "/resource/js/backend/admin.link.js"
 ]/>
 <@page isBackend=true assets=assets>
-    <div class="col-sm-9 col-md-10">
+    <div class="col-sm-9 col-md-10 bdiv">
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li class="active">链接</li>
@@ -21,8 +21,8 @@
                 <tbody>
                 <#list links as link>
                     <tr><td>${link.name!}</td><td><a target="_blank" href='${link.url}'>${link.url!}</a></td>
-                        <td><#if link.visible?string("1", "0") == 1>"是"<#else>"否"</#if></td><td>${link.createTime?string("yyyy-MM-dd")!}</td>
-                        <td class="center"><span class="icon glyphicon glyphicon-pencil pointer" onclick="zblog.link.edit('${link.id!}')"></span>
+                        <td><#if link.visible?string("1", "0") == "1">是<#else>否</#if></td><td>${link.createTime?string("yyyy-MM-dd")!}</td>
+                        <td class="center"><span class="icon glyphicon glyphicon-pencil pointer" onclick="zblog.link.editCate('${link.id!}')"></span>
                             <span class="glyphicon glyphicon-trash pointer" onclick="zblog.link.remove('${link.id!}')"></span></td></tr>
                 </#list>
                 </tbody>
@@ -40,6 +40,7 @@
                             current: ${currentPage!0},
                             urlPrefix: "${domain}",
                             isBackend: true,
+                            title: "全部链接",
                             backfun: function(e) {
                                 //console.log(e);//回调
                             }

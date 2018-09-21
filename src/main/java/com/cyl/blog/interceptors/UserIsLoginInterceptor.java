@@ -18,13 +18,13 @@ public class UserIsLoginInterceptor extends  AbstractDetectingUrlInterceptor {
     protected boolean doPreHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 //        String user = (String) request.getSession().getAttribute("comment_author");
         User user = CookieRemberManager.extractValidRememberMeCookieUser(request, response);
-        LOG.info("currentUser: "+ user);
+//        LOG.info("currentUser: "+ user);
         //LOG.info("name: {}"+current.getNickName());
 
         if(user == null) {
             if(request.getRequestURI() != null ) {
                 LOG.info("request url(): {}"+request.getRequestURI());
-                response.sendRedirect("/");
+                response.sendRedirect("/backend/login?loginInterceptorUrl=" + request.getRequestURI());
             }
             LOG.info("SessionBindInterceptor user is null.");
             return true;

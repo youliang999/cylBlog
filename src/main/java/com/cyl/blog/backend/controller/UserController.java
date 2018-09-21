@@ -10,12 +10,18 @@ import com.cyl.blog.service.UserService;
 import com.cyl.blog.util.CookieUtil;
 import com.cyl.blog.util.IdGenerator;
 import com.cyl.blog.util.StringUtils;
+import com.google.gson.Gson;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
@@ -29,6 +35,7 @@ import java.util.Map;
 @RequestMapping("/backend/users")
 @RequiresAuthentication
 public class UserController extends BaseController{
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
@@ -37,7 +44,7 @@ public class UserController extends BaseController{
     public ModelAndView index(@PathVariable(value = "page") int page){
         ModelAndView mv = new ModelAndView("backend/new/user-list");
         PageIterator<User> userPageIterator = userService.list(page, 15);
-        mv.addObject("page", userPageIterator.getData());
+        mv.addObject("users", userPageIterator.getData());
         mv.addObject("currentPage", page);
         mv.addObject("totalPages", userPageIterator.getTotalPages());
         mv.addObject("totalCount", userPageIterator.getTotalCount());
@@ -60,7 +67,7 @@ public class UserController extends BaseController{
         user.setLastUpdate(user.getCreateTime());
 
         userService.insert(user);
-        return "redirect:/backend/users";
+        return "redirect:/backend/users/1";
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -75,7 +82,7 @@ public class UserController extends BaseController{
 
         user.setLastUpdate(new Date());
         userService.update(user);
-        mv.setViewName("redirect:/backend/users");
+        mv.setViewName("redirect:/backend/users/1");
         return mv;
     }
 
@@ -104,11 +111,13 @@ public class UserController extends BaseController{
         return mv;
     }
 
-    @RequestMapping(value = "/my", method = RequestMethod.PUT)
+    @RequestMapping(value = "/my", method = RequestMethod.POST)
     public ModelAndView upmy(User user, String repass){
+        log.info("===>>> user:{}", new Gson().toJson(user));
         ModelAndView mv = new ModelAndView("backend/new/user-my");
         Map<String, Object> form = UserFormValidator.validateMy(user, repass);
         if(!form.isEmpty()){
+            log.info("===>>> form:{}", new Gson().toJson(form));
             mv.addObject("form", form);
             mv.addObject("my", user);
             return mv;
@@ -116,7 +125,7 @@ public class UserController extends BaseController{
         user.setRole(WebContextFactory.get().getUser().getRole());
         user.setLastUpdate(new Date());
         userService.update(user);
-        mv.setViewName("redirect:/backend/users");
+        mv.setViewName("redirect:/backend/users/1");
         return mv;
     }
 

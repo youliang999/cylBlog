@@ -30,7 +30,8 @@ public class BlogIndexServiceImpl implements BlogIndexService {
     @Override
     public boolean addIndex(BlogIndex index) {
         try {
-            UpdateResponse response = solrClient.addBean(index);
+            UpdateResponse response = solrClient.addBean(index );
+            solrClient.commit();
             if (response != null && response.getStatus() == 0) {
                 return true;
             }
@@ -46,6 +47,7 @@ public class BlogIndexServiceImpl implements BlogIndexService {
     public boolean addIndexs(List<BlogIndex> indexList) {
         try {
             UpdateResponse response = solrClient.addBeans(indexList);
+            solrClient.commit();
             if (response != null && response.getStatus() == 0) {
                 return true;
             }
@@ -61,6 +63,7 @@ public class BlogIndexServiceImpl implements BlogIndexService {
     public boolean deleteIndex(int blogId) {
         try {
             UpdateResponse response = solrClient.deleteById(String.valueOf(blogId));
+            solrClient.commit();
             if (response != null && response.getStatus() == 0) {
                 return true;
             }
@@ -75,6 +78,7 @@ public class BlogIndexServiceImpl implements BlogIndexService {
         List<String> bidStrs = bids.stream().map(bid -> String.valueOf(bid)).collect(Collectors.toList());
         try {
             UpdateResponse response = solrClient.deleteById(bidStrs);
+            solrClient.commit();
             if (response != null && response.getStatus() == 0) {
                 return true;
             }

@@ -12,6 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cyl-blog-spider-task" target="1.8" />
+      <module name="cyl-common-login" target="1.5" />
       <module name="cyl-web-spider" target="1.7" />
       <module name="cylBlog" target="1.8" />
       <module name="sinaSpider" target="1.7" />

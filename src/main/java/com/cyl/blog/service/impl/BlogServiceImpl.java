@@ -9,6 +9,7 @@ import com.cyl.blog.service.BlogService;
 import com.cyl.blog.service.CategoryService;
 import com.cyl.blog.service.TagService;
 import com.cyl.blog.service.UserService;
+import com.cyl.blog.service.handler.IndexHandler;
 import com.cyl.blog.service.mapper.BaseMapper;
 import com.cyl.blog.service.mapper.BlogMapper;
 import com.cyl.blog.util.CollectionUtils;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     private static final Logger log = LoggerFactory.getLogger(BlogServiceImpl.class);
     private static final Integer PAGESIZE = 20;
     ///private static final ExecutorService executorService = Executors.newFixedThreadPool(50);
-
+    private static final SimpleDateFormat datefo = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private BlogMapper blogMapper;
     @Autowired
@@ -39,7 +41,46 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     private TagService tagService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private IndexHandler indexHandler;
 
+    @Override
+    public boolean insertBlog(Blog blog) {
+        if(blog == null) {
+            return false;
+        }
+        blogMapper.insertBlog(blog);
+        log.info("===>>> insert id :{} ", blog.getId());
+        String id = blog.getId();
+        if(Integer.valueOf(id) > 0) {
+            Blog n = blogMapper.getBlogById(String.valueOf(id));
+            indexHandler.createHandle(n);
+        }
+        return Integer.valueOf(id) > 0;
+    }
+
+    @Override
+    public boolean updateBlog(Blog blog) {
+        if(blog == null) {
+            return false;
+        }
+        int id = blogMapper.update(blog);
+        if(id > 0) {
+            Blog n = blogMapper.getBlogById(String.valueOf(id));
+            indexHandler.updateHandle(n);
+        }
+        return id > 0;
+    }
+
+    @Override
+    public boolean delById(String id) {
+        if(StringUtil.isEmpty(id)) {
+            return false;
+        }
+        blogMapper.deleteById(id);
+        indexHandler.deleteHandle(id);
+        return true;
+    }
 
     public PageIterator<Blog> getBlogs(int page, int pageSize) {
         if(page <=0 || pageSize <= 0) {
@@ -177,6 +218,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
 
     private BlogVo getBlogVo(String bid) {
        Blog blog = blogMapper.loadById(bid);
+//       log.info("====>>> blog:{} ", blog);
        blog.setId(bid);
        return makeBlogVo(blog);
     }
@@ -285,7 +327,12 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
 
     @Override
     public List<Blog> getRecentBlogs(int limit) {
-        return blogMapper.getRecentBlogs(limit);
+        List<Blog> blogs = Optional.ofNullable(blogMapper.getRecentBlogs(limit))
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(blog -> blog.setCreateDate(datefo.format(blog.getCreateTime())))
+                .collect(Collectors.toList());
+        return blogs;
     }
 
     @Override
@@ -297,6 +344,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     public Blog getBlogById(String id) {
         return blogMapper.getBlogById(id);
     }
+
 
     /**
      * 更改评论数

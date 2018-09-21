@@ -32,25 +32,25 @@
             <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
             <nav class="nav navbar-nav">
                 <ul class="cl">
-                    <li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 新增 <i class="Hui-iconfont">&#xe6d5;</i></a>
-                        <ul class="dropDown-menu menu radius box-shadow">
-                            <li><a href="javascript:;" onclick="article_add('添加资讯','article-add.html')"><i class="Hui-iconfont">&#xe616;</i> 资讯</a></li>
-                            <li><a href="javascript:;" onclick="picture_add('添加资讯','picture-add.html')"><i class="Hui-iconfont">&#xe613;</i> 图片</a></li>
-                            <li><a href="javascript:;" onclick="product_add('添加资讯','product-add.html')"><i class="Hui-iconfont">&#xe620;</i> 产品</a></li>
-                            <li><a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')"><i class="Hui-iconfont">&#xe60d;</i> 用户</a></li>
-                        </ul>
-                    </li>
+                    <#--<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 新增 <i class="Hui-iconfont">&#xe6d5;</i></a>-->
+                        <#--<ul class="dropDown-menu menu radius box-shadow">-->
+                            <#--<li><a href="javascript:;" onclick="article_add('添加资讯','article-add.html')"><i class="Hui-iconfont">&#xe616;</i> 资讯</a></li>-->
+                            <#--<li><a href="javascript:;" onclick="picture_add('添加资讯','picture-add.html')"><i class="Hui-iconfont">&#xe613;</i> 图片</a></li>-->
+                            <#--<li><a href="javascript:;" onclick="product_add('添加资讯','product-add.html')"><i class="Hui-iconfont">&#xe620;</i> 产品</a></li>-->
+                            <#--<li><a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')"><i class="Hui-iconfont">&#xe60d;</i> 用户</a></li>-->
+                        <#--</ul>-->
+                    <#--</li>-->
                 </ul>
             </nav>
             <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
                 <ul class="cl">
-                    <li>超级管理员</li>
+                    <li><#if currentUser?? >${currentUser.role!}</#if></li>
                     <li class="dropDown dropDown_hover">
                         <a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
-                            <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-                            <li><a href="#">切换账户</a></li>
-                            <li><a href="#">退出</a></li>
+                            <#--<li><a href="${g.domain}/backend/users/my" onClick="myselfinfo()">个人信息</a></li>-->
+                            <#--<li><a href="#">切换账户</a></li>-->
+                            <li><a href="${g.domain}/backend/logout">退出</a></li>
                         </ul>
                     </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
@@ -75,10 +75,10 @@
             <dt><i class="Hui-iconfont">&#xe616;</i> 系统设置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/welcome"  data-title="首页" href="javascript:void(0)">首页</a></li>
-                    <li><a data-href="${g.domain}/backend/options/general"  data-title="常规选项" href="javascript:void(0)">常规选项</a></li>
-                    <li><a data-href="${g.domain}/backend/options/post"  data-title="撰写/阅读" href="javascript:void(0)">撰写/阅读</a></li>
-                    <li><a data-href="${g.domain}/backend/options/email"  data-title="邮件评论" href="javascript:void(0)">邮件评论</a></li>
+                    <li><a data-href="${g.domain}/backend/welcome" id="welcome"  data-title="首页" href="javascript:void(0)">首页</a></li>
+                    <li><a data-href="${g.domain}/backend/options/general" id="general"  data-title="常规选项" href="javascript:void(0)">常规选项</a></li>
+                    <li><a data-href="${g.domain}/backend/options/post" id="postRead"  data-title="撰写/阅读" href="javascript:void(0)">撰写/阅读</a></li>
+                    <li><a data-href="${g.domain}/backend/options/email" id="emailComment"  data-title="邮件评论" href="javascript:void(0)">邮件评论</a></li>
                 </ul>
             </dd>
         </dl>
@@ -86,9 +86,12 @@
             <dt><i class="Hui-iconfont">&#xe613;</i> 博客<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/posts/edit" data-title="写博客" href="javascript:void(0)">写博客</a></li>
-                    <li><a data-href="${g.domain}/backend/posts/1" data-title="所有博客" href="javascript:void(0)">所有博客</a></li>
-                    <li><a data-href="${g.domain}/backend/categorys" data-title="博客分类" href="javascript:void(0)">博客分类</a></li>
+                    <li><a data-href="${g.domain}/backend/blog/markdown" id="postBlogMD" data-title="发布博客-markdown" href="javascript:void(0)">发布博客-markdown</a></li>
+                    <#--<li><a data-href="${g.domain}/backend/blog/notepad" data-title="发布博客(notepad)" href="javascript:void(0)">发布博客(notepad)</a></li>-->
+                    <li><a data-href="${g.domain}/backend/blog/ueditor" id="postBlogUe" data-title="发布博客-ueditor" href="javascript:void(0)">发布博客-ueditor</a></li>
+                    <li><a data-href="${g.domain}/backend/posts/edit" id="writeBlog" data-title="写博客" href="javascript:void(0)">写博客</a></li>
+                    <li><a data-href="${g.domain}/backend/posts/1" id="allBlog" data-title="所有博客" href="javascript:void(0)">所有博客</a></li>
+                    <li><a data-href="${g.domain}/backend/categorys" id="blogType" data-title="博客分类" href="javascript:void(0)">博客分类</a></li>
                 </ul>
             </dd>
         </dl>
@@ -96,8 +99,8 @@
             <dt><i class="Hui-iconfont">&#xe620;</i> 多媒体<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/uploads/1" data-title="媒体库" href="javascript:void(0)">媒体库</a></li>
-                    <li><a data-href="${g.domain}/backend/uploads/edit" data-title="添加" href="javascript:void(0)">添加</a></li>
+                    <li><a data-href="${g.domain}/backend/uploads/1" id="mediaLib" data-title="媒体库" href="javascript:void(0)">媒体库</a></li>
+                    <li><a data-href="${g.domain}/backend/uploads/edit" id="addMedia" data-title="添加" href="javascript:void(0)">添加</a></li>
                 </ul>
             </dd>
         </dl>
@@ -114,7 +117,7 @@
             <dt><i class="Hui-iconfont">&#xe60d;</i> 评论管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/comments" data-title="评论" href="javascript:;">评论</a></li>
+                    <li><a data-href="${g.domain}/backend/comments/1" id="comments" data-title="评论" href="javascript:;">评论</a></li>
                 </ul>
             </dd>
         </dl>
@@ -122,8 +125,8 @@
             <dt><i class="Hui-iconfont">&#xe62d;</i> 链接管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/links/edit" data-title="添加链接" href="javascript:void(0)">添加链接</a></li>
-                    <li><a data-href="${g.domain}/backend/links" data-title="全部链接" href="javascript:void(0)">全部链接</a></li>
+                    <li><a data-href="${g.domain}/backend/links/edit" id="addLink" data-title="添加链接" href="javascript:void(0)">添加链接</a></li>
+                    <li><a data-href="${g.domain}/backend/links/1" id="allLink" data-title="全部链接" href="javascript:void(0)">全部链接</a></li>
                 </ul>
             </dd>
         </dl>
@@ -131,9 +134,9 @@
             <dt><i class="Hui-iconfont">&#xe61a;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/users" data-title="所有用户" href="javascript:void(0)">所有用户</a></li>
-                    <li><a data-href="${g.domain}/backend/users/edit" data-title="添加用户" href="javascript:void(0)">添加用户</a></li>
-                    <li><a data-href="${g.domain}/backend/users/my" data-title="我的个人资料" href="javascript:void(0)">我的个人资料</a></li>
+                    <li><a data-href="${g.domain}/backend/users/1" id="allUser" data-title="所有用户" href="javascript:void(0)">所有用户</a></li>
+                    <li><a data-href="${g.domain}/backend/users/edit" id="addUser" data-title="添加用户" href="javascript:void(0)">添加用户</a></li>
+                    <li><a data-href="${g.domain}/backend/users/my" id="myInfo" data-title="我的个人资料" href="javascript:void(0)">我的个人资料</a></li>
                 </ul>
             </dd>
         </dl>
@@ -141,10 +144,10 @@
             <dt><i class="Hui-iconfont">&#xe62e;</i> 工具<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="${g.domain}/backend/tool/redis" data-title="缓存监控" href="javascript:void(0)">缓存监控</a></li>
+                    <li><a data-href="${g.domain}/backend/tool/redis" id="redisLook" data-title="缓存监控" href="javascript:void(0)">缓存监控</a></li>
                     <li><a data-title="solr监控" href="http://localhost:8888/index.html?output=embed" target="_blank">solr监控</a></li>
-                    <li><a data-href="${g.domain}/backend/tool/import" data-title="导入" href="javascript:void(0)">导入</a></li>
-                    <li><a data-href="${g.domain}/backend/tool/output" data-title="导出" href="javascript:void(0)">导出</a></li>
+                    <#--<li><a data-href="${g.domain}/backend/tool/import" data-title="导入" href="javascript:void(0)">导入</a></li>-->
+                    <#--<li><a data-href="${g.domain}/backend/tool/output" data-title="导出" href="javascript:void(0)">导出</a></li>-->
                 </ul>
             </dd>
         </dl>

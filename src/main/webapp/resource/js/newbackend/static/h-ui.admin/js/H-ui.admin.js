@@ -54,6 +54,7 @@ function Hui_admin_tab(obj){
 		bStopIndex = 0,
 		href = $(obj).attr('data-href'),
 		title = $(obj).attr("data-title"),
+     	iframeId = $(obj).attr("id"),
 		topWindow = $(window.parent.document),
 		show_navLi = topWindow.find("#min_title_list li"),
 		iframe_box = topWindow.find("#iframe_box");
@@ -77,7 +78,7 @@ function Hui_admin_tab(obj){
 		}
 	});
 	if(!bStop){
-		creatIframe(href,title);
+		creatIframe(href,title,iframeId);
 		min_titleList();
 	}
 	else{
@@ -94,7 +95,7 @@ function min_titleList(){
 }
 
 /*创建iframe*/
-function creatIframe(href,titleName){
+function creatIframe(href,titleName, iframeId ){
 	var topWindow=$(window.parent.document),
 		show_nav=topWindow.find('#min_title_list'),
 		iframe_box=topWindow.find('#iframe_box'),
@@ -137,7 +138,8 @@ function creatIframe(href,titleName){
 		$tabNav.css({left:0})
 	}
 	iframeBox.hide();
-	iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+href+'></iframe></div>');
+
+	iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe id='+iframeId+' frameborder="0" src='+href+'></iframe></div>');
 	var showBox=iframe_box.find('.show_iframe:visible');
 	showBox.find('iframe').load(function(){
 		showBox.find('.loading').hide();

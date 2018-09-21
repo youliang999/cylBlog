@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by youliang.cheng on 2018/8/2.
@@ -20,18 +22,31 @@ public class CommentServiceImpl extends BlogBaseServiceImpl implements CommentSe
     @Autowired
     private CommentMapper commentMapper;
     @Override
-    public PageIterator<CommentVO> listByStatus(int pageIndex, int pageSize, Collection<String> status) {
-        return null;
+    public PageIterator<Map> listByStatus(int pageIndex, int pageSize, Collection<String> status) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("status", status);
+        data.put("offset", (pageIndex - 1) * pageSize);
+        data.put("limit", pageSize);
+        int count = commentMapper.countByStatus(data);
+        PageIterator<Map> commentVOPageIterator = PageIterator.createInstance(pageIndex, pageSize, count);
+        commentVOPageIterator.setData(commentMapper.listByStatus(data));
+        return commentVOPageIterator;
     }
 
     @Override
-    public CommentVO listCountByGroupStatus() {
-        return null;
+    public Map listCountByGroupStatus() {
+        List<Map<String, Object>> list = commentMapper.listCountByGroupStatus();
+        Map<String, Object> mc = new HashMap<>();
+        for(Map<String, Object> temp : list){
+            mc.put(String.valueOf(temp.get("status")), temp.get("count"));
+        }
+
+        return mc;
     }
 
     @Override
     public List<CommentVO> listRecent() {
-        return null;
+       return commentMapper.listRecent();
     }
 
     @Override

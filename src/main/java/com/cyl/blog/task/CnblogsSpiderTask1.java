@@ -166,7 +166,7 @@ public class CnblogsSpiderTask1 {
                         blog.setCcount(0);
                         blog.setRcount(0);
                         blog.setCreator(blogVo.getUser().getId());
-                        blog.setBlogType("Engineering");
+                        blog.setBlog_type("Engineering");
                         blog.setCreateTime(new Date());
                         blog.setLastUpdate(new Date());
                         String content = "";

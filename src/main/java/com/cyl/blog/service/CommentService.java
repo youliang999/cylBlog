@@ -5,15 +5,16 @@ import com.cyl.blog.vo.CommentVO;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by youliang.cheng on 2018/8/2.
  */
 public interface CommentService extends BlogBaseService {
 
-    PageIterator<CommentVO> listByStatus(int pageIndex, int pageSize, Collection<String> status);
+    PageIterator<Map> listByStatus(int pageIndex, int pageSize, Collection<String> status);
 
-    CommentVO listCountByGroupStatus();
+    Map listCountByGroupStatus();
 
     List<CommentVO> listRecent();
 

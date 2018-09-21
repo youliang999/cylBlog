@@ -3,6 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cyl.blog.service.mapper.BlogMapper">
+    <resultMap id="result_map" type="com.cyl.blog.entity.Blog">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+    </resultMap>
+
 
     <select id="getNextBid" parameterType="java.lang.String" resultType="java.lang.String">
         select id from post where type='post' and pstatus = 1  and createTime >
@@ -62,7 +67,18 @@
     <!--base-->
     <insert id="insert" parameterType="Blog">
         insert into post(id,title,excerpt,content,type,parent,categoryid,pstatus,cstatus,ccount,rcount,createTime,creator, blog_type,lastUpdate)
-        values(#{id},#{title},#{excerpt},#{content, jdbcType=CLOB},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blogType},#{lastUpdate})
+        values(#{id},#{title},#{excerpt},#{content, jdbcType=CLOB},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blog_type},#{lastUpdate})
+        <selectKey keyProperty="id" resultType="java.lang.String">
+            select LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <insert id="insertBlog" parameterType="Blog">
+        insert into post(id,title,excerpt,content,type,parent,categoryid,pstatus,cstatus,ccount,rcount,createTime,creator, blog_type,lastUpdate)
+        values(#{id},#{title},#{excerpt},#{content, jdbcType=CLOB},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blog_type},#{lastUpdate})
+        <selectKey keyProperty="id" resultType="java.lang.String">
+            select LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
     <select id="loadById" parameterType="java.lang.String" resultType="Blog">

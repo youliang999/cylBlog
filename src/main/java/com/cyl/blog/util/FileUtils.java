@@ -1,5 +1,8 @@
 package com.cyl.blog.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.Arrays;
 
@@ -10,7 +13,7 @@ import java.util.Arrays;
  * 
  */
 public class FileUtils{
-
+  private static final Logger log = LoggerFactory.getLogger(FileUtils.class);
   private FileUtils(){
   }
 
@@ -32,7 +35,9 @@ public class FileUtils{
    * @return
    */
   public static String getFileName(String filename){
+    log.info("===>>> fileName:{}", filename);
     filename = getFileNameWithExt(filename);
+    log.info("===>>> getFileNameWithExt fileName:{}", filename);
     int point = filename.lastIndexOf(".");
     return filename.substring(0, point);
   }

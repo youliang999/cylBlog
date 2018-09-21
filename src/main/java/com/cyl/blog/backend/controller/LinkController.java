@@ -8,10 +8,16 @@ import com.cyl.blog.plugin.PageIterator;
 import com.cyl.blog.service.LinkService;
 import com.cyl.blog.util.IdGenerator;
 import com.cyl.blog.util.StringUtils;
+import com.google.gson.Gson;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
@@ -25,6 +31,7 @@ import java.util.Map;
 @RequestMapping("/backend/links")
 @RequiresRoles("admin")
 public class LinkController extends BaseController{
+    private static final Logger log = LoggerFactory.getLogger(LinkController.class);
     @Autowired
     private LinkService linkService;
 
@@ -42,6 +49,7 @@ public class LinkController extends BaseController{
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView insert(Link link){
+        log.info("===>>> link:{}", new Gson().toJson(link));
         ModelAndView mv = new ModelAndView("backend/new/link-edit");
         Map<String, Object> form = LinkFormValidator.validateInsert(link);
         if(!form.isEmpty()){
@@ -55,7 +63,7 @@ public class LinkController extends BaseController{
         link.setId(IdGenerator.uuid19());
         link.setVisible(true);
         linkService.insert(link);
-        mv.setViewName("redirect:/backend/links");
+        mv.setViewName("redirect:/backend/links/1");
         return mv;
     }
 
@@ -71,7 +79,7 @@ public class LinkController extends BaseController{
 
         link.setLastUpdate(new Date());
         linkService.update(link);
-        mv.setViewName("redirect:/backend/links");
+        mv.setViewName("redirect:/backend/links/1");
         return mv;
     }
 

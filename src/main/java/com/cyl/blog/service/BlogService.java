@@ -12,6 +12,12 @@ import java.util.List;
  */
 public interface BlogService extends BlogBaseService{
 
+    boolean insertBlog(Blog blog);
+
+    boolean updateBlog(Blog blog);
+
+    boolean delById(String id);
+
     PageIterator<Blog> getBlogs(int page, int pageSize);
 
     PageIterator<BlogVo> getBlogVos(int page, int pageSize);

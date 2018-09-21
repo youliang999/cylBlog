@@ -2,6 +2,7 @@ package com.cyl.blog.backend.controller;
 
 import com.cyl.blog.backend.helper.OptionHelper;
 import com.cyl.blog.constants.Constants;
+import com.cyl.blog.controller.BaseController;
 import com.cyl.blog.controller.helper.BlogHelper;
 import com.cyl.blog.entity.User;
 import com.cyl.blog.helper.CookieRemberManager;
@@ -13,6 +14,7 @@ import com.cyl.blog.service.UserService;
 import com.cyl.blog.shiro.StatelessToken;
 import com.cyl.blog.util.CookieUtil;
 import com.cyl.blog.util.ServletUtils;
+import com.cyl.blog.util.StringUtils;
 import com.google.gson.Gson;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -36,7 +38,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/backend")
-public class BackendController {
+public class BackendController extends BaseController{
     private static final Logger log = LoggerFactory.getLogger(BackendController.class);
     @Autowired
     UserService userService;
@@ -69,15 +71,21 @@ public class BackendController {
         blogHelper.getBaseInfo(mv);
 //        log.info("===>>> getBaseInfo cost {} ms", System.currentTimeMillis() - start1);
 //        log.info("===>>> welcome cost {} ms", System.currentTimeMillis() - start);
+        mv.addObject("currentUser", getUser());
         return mv;
     }
 
 
     @RequestMapping(value = "/login")
-    public ModelAndView login(String msg){
+    public ModelAndView login(String msg,
+                              @RequestParam(value = "loginInterceptorUrl", required = false, defaultValue = "") String requestUrl){
         ModelAndView mv = new ModelAndView("backend/login-new");
         log.info("get type login =============>");
         cookieFunction(mv);
+        if(WebContextFactory.get().isLogon() && !StringUtils.isBlank(requestUrl)) {
+            mv.setViewName("redirect:" + requestUrl);
+            return mv;
+        }
         if(WebContextFactory.get().isLogon()) {
             mv.setViewName("redirect:/backend/index");
             return mv;
@@ -90,6 +98,19 @@ public class BackendController {
         return mv;
     }
 
+    @RequestMapping(value = "/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response){
+        CookieRemberManager.logout(request, response);
+        SecurityUtils.getSubject().logout();
+        CookieUtil cookieUtil = new CookieUtil(request, response);
+        cookieUtil.removeCokie(Constants.COOKIE_CSRF_TOKEN);
+        cookieUtil.removeCokie("comment_author");
+        cookieUtil.removeCokie("comment_author_email");
+        cookieUtil.removeCokie("comment_author_url");
+
+        return "redirect:/backend/login?msg=logout";
+    }
+
 
     @RequestMapping(value = "/loginsubmit")
     @ResponseBody
@@ -97,7 +118,7 @@ public class BackendController {
                             @RequestParam(value = "userpwd") String userpwd,
                             HttpServletRequest request, HttpServletResponse response){
         log.info("post type login =============>");
-        log.info("===>>> input form:{}, {}", userName, userpwd);
+        log.info("===>>> input form:{}", userName);
 //        Map<String, String> result = LoginFormValidator.validateLogin(form);
 //        if(!result.isEmpty()){
 //            request.setAttribute("msg", result.get("msg"));

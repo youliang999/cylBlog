@@ -4,7 +4,7 @@
 "/resource/webuploader-0.1.5/webuploader.css"
 ]/>
 <@page isBackend=true assets=assets>
-    <div class="col-sm-9 col-md-10">
+    <div class="col-sm-9 col-md-10 bdiv">
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li>多媒体</li>
@@ -33,6 +33,6 @@
     </div>
 
 </div>
-<script type="text/javascript" src="http://localhost:8081/resource/webuploader-0.1.5/webuploader.min.js"></script>
-<script type="text/javascript" src="http://localhost:8081/resource/js/backend/upload.js"></script>
+<script type="text/javascript" src="${g.domain}/resource/webuploader-0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="${g.domain}/resource/js/backend/upload.js"></script>
 </@page>

@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public interface BlogMapper extends BaseMapper {
 
+    int insertBlog(Blog blog);
+
     List<Blog> getBlogs(Map<String, Object> map);
 
     List<Blog> getAllBlogs(Map<String, Object> map);

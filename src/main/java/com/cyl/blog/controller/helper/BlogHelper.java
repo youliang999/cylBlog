@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ public class BlogHelper {
     private static final long CACHE_DURATION = 60;
     private static final TimeUnit CACHE_TIME_UNIT = TimeUnit.MINUTES;
     private static final Logger log = LoggerFactory.getLogger(BlogHelper.class);
+    private static final SimpleDateFormat datefo = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private BlogService blogService;
     @Autowired
@@ -48,8 +50,8 @@ public class BlogHelper {
     private CategoryService categoryService;
     @Autowired
     private UserService userService;
-//    @Autowired
-//    private UploadService uploadService;
+    @Autowired
+    private UploadService uploadService;
 
     @Autowired
     @Qualifier("baseCache")
@@ -115,18 +117,36 @@ public class BlogHelper {
                 data.put("userCount", userService.count());
                 data.put("postCount", getTotalCount());
                 data.put("commentCount", commentService.count());
+                data.put("uploadCount", uploadService.count());
                 data.put("posts", getRecentBlog(10));
-                data.put("comments", commentService.listRecent());
+                data.put("comments", listRecent());
                 return data;
             }
         }, CACHE_DURATION, CACHE_TIME_UNIT);
         mv.addObject("userCount", data.get("userCount"));
         mv.addObject("postCount", data.get("postCount"));
         mv.addObject("commentCount", data.get("commentCount"));
-//        model.addAttribute("uploadCount", uploadService.count());
+        mv.addObject("uploadCount", data.get("uploadCount"));
         mv.addObject("posts", data.get("posts"));
         mv.addObject("comments", data.get("comments"));
     }
+
+    /**
+     * 最近留言
+     *
+     * @return
+     */
+    public List<CommentVO> listRecent(){
+        List<CommentVO> list = commentService.listRecent();
+        for(CommentVO cvo : list){
+            Blog post = blogService.loadById(cvo.getPostid());
+            cvo.setCreateDate(datefo.format(cvo.getCreateTime()));
+            cvo.setPost(post);
+        }
+
+        return list;
+    }
+
 
     /**
      * 插入文章，同时更新上传文件的postid
@@ -136,8 +156,8 @@ public class BlogHelper {
      */
     @Transactional
     public void insertBlog(Blog post, List<Tag> tags){
-        post.setBlogType("java");
-        blogService.insert(post);
+        post.setBlog_type("java");
+        blogService.insertBlog(post);
     /* 查找当前html中所有图片链接 */
         List<String> imgs = extractImagepath(JsoupUtils.getImagesOrLinks(post.getContent()));
         if(!CollectionUtils.isEmpty(imgs)){
@@ -191,14 +211,15 @@ public class BlogHelper {
         Blog blog = blogService.getBlogById(post.getId());
         Blog nBlog = blog.copy();
         post.doUpdate(nBlog);
-        int affect = blogService.update(nBlog);
+
+        blogService.updateBlog(nBlog);
 
         if(PostConstants.TYPE_POST.equals(post.getType()) && !CollectionUtils.isEmpty(tags)){
             tagService.deleteByPostid(post.getId());
             tagService.insertBatch(tags);
         }
 
-        return affect != 0;
+        return true;
     }
 
     /**
@@ -212,7 +233,7 @@ public class BlogHelper {
     public void removeBlog(String postid, String postType){
         //List<Upload> list = uploadService.listByPostid(postid);
        // uploadService.deleteByPostid(postid);
-        blogService.deleteById(postid);
+        blogService.delById(postid);
 
 //        for(Upload upload : list){
 //            File file = new File(WebConstants.APPLICATION_PATH, upload.getPath());

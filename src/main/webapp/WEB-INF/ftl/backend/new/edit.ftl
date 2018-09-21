@@ -4,7 +4,7 @@
 "/resource/epiceditor-0.2.3/js/epiceditor.min.js"
 ]/>
 <@page isBackend=true assets=assets>
-<div class="col-sm-9 col-md-10">
+<div class="col-sm-9 col-md-10 bdiv">
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li>文章</li>

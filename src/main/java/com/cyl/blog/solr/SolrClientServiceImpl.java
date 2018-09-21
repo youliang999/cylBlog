@@ -16,7 +16,7 @@ public class SolrClientServiceImpl {
     private  String client = "client";
 
     private static final String host = "http://127.0.0.1:8080/solr/";
-    //private static final String host = "http://127.0.0.1:8888/";
+//    private static final String host = "http://127.0.0.1:8888/";
     private static final String core = "blog_index";
 
     public HttpSolrClient getSolrClient() {

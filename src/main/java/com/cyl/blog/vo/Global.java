@@ -4,6 +4,8 @@ package com.cyl.blog.vo;
 import com.cyl.blog.constants.OptionConstants;
 import com.cyl.blog.helper.ApplicationContextUtil;
 import com.cyl.blog.service.OptionsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -16,6 +18,7 @@ import java.util.Date;
  *
  */
 public class Global implements Serializable{
+  private static final Logger log = LoggerFactory.getLogger(Global.class);
   private static final long serialVersionUID = 6565516632806601542L;
   private String domain;
   private String title;
@@ -26,6 +29,7 @@ public class Global implements Serializable{
   private int year;
 
   public Global(String domain){
+    log.info("===>>> domain:{}", domain);
     this.domain = domain;
     this.title = getTitle();
     this.subtitle = getSubtitle();

@@ -31,7 +31,14 @@ public class OptionsServiceImpl extends BlogBaseServiceImpl implements OptionsSe
 
   public String getOptionValue(String name){
     //LOG.info("===>>> name:{}", name);
-    String res = configCache.getOrLoadAndSet(name, s -> optionMapper.getOptionValue(name), DEFAULT_DURATION, DEFAULT_TIME_UNIT);
+    String res="";
+    try {
+
+      res = configCache.getOrLoadAndSet(name, s -> optionMapper.getOptionValue(name), DEFAULT_DURATION, DEFAULT_TIME_UNIT);
+    } catch (Exception e) {
+        LOG.error("error happen:{}", e.getMessage());
+        return optionMapper.getOptionValue(name);
+    }
    // LOG.info("===>>> res: {}", res);
     return res;
   }

@@ -21,20 +21,29 @@ public class SessionBindInterceptor extends AbstractDetectingUrlInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(SessionBindInterceptor.class);
     private static final DataBind<User> LOGIN_USER_BIND = DataBindManager.getInstance().getDataBind(DataBindTypeEnum.LOGIN_USER);
     private static final DataBind<Global> global = DataBindManager.getInstance().getDataBind(DataBindTypeEnum.GLOBAL);
+
+//    @Autowired
+//    @Qualifier("configCache")
+//    private JedisOperationService<String, String> configCache;
+
 //    private final SessionContext sessionContext = SessionContext.getInstance();
 
     @Override
     protected boolean doPreHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 //        User user = (User)request.getSession().getAttribute("comment_author");
         User user = CookieRemberManager.extractValidRememberMeCookieUser(request, response);
-        LOG.info("currentUser: "+ user);
-        //sessionContext.bind(user);
-        LOGIN_USER_BIND.put(user);
         global.put(new Global(ServletUtils.getDomain(request)));
-        User current = LOGIN_USER_BIND.get();
+        if(user != null) {
+            LOG.info("currentUser: " + user.getNickName());
+            //sessionContext.bind(user);
+            LOGIN_USER_BIND.put(user);
+        }
         //LOG.info("name: {}"+current.getNickName());
-        LOG.info("===>>> user ip:{}", getRemortIP(request));
-        LOG.info("===>>> user ip2:{}", getIpAddr(request));
+        String ip = getRemortIP(request);
+        LOG.info("===>>> user ip:{}", ip);
+
+       // configCache.set(ip, new Date().toString());
+//        LOG.info("===>>> user ip2:{}", getIpAddr(request));
         return true;
     }
 
@@ -45,17 +54,17 @@ public class SessionBindInterceptor extends AbstractDetectingUrlInterceptor {
         return request.getHeader("x-forwarded-for");
     }
 
-    public String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
-    }
+//    public String getIpAddr(HttpServletRequest request) {
+//        String ip = request.getHeader("x-forwarded-for");
+//        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//            ip = request.getHeader("Proxy-Client-IP");
+//        }
+//        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//            ip = request.getHeader("WL-Proxy-Client-IP");
+//        }
+//        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//            ip = request.getRemoteAddr();
+//        }
+//        return ip;
+//    }
 }

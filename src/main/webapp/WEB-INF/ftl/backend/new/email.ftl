@@ -1,5 +1,5 @@
 <@page isBackend=true >
-<div class="col-sm-9 col-md-10" style="width: 95%; margin-left: 10px;">
+<div class="col-sm-9 col-md-10 bdiv" >
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li>系统设置</li>

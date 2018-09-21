@@ -2,7 +2,7 @@
 "/resource/js/backend/admin.upload.js"
 ]/>
 <@page isBackend=true assets=assets>
-    <div class="col-sm-9 col-md-10">
+    <div class="col-sm-9 col-md-10 bdiv">
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li class="active">多媒体</li>
@@ -22,7 +22,7 @@
                 <tbody>
                 <#if uploads??>
                     <#list uploads as upload>
-                    <tr><td><img src="${g.domain}/${upload.path!}" width="80" height="50" /></td>
+                    <tr><td><img src="${g.domain}${upload.path!}" width="80" height="50" /></td>
                         <td class="filename"><strong>${upload.name!}</strong><p class="fileformat">${upload.fileExt!}</p>
                             <div class="row-action">
                                 <span><a href="javascript:zblog.upload.remove('${upload.id}');">永久删除</a>&nbsp;|&nbsp;</span>
@@ -49,6 +49,7 @@
                             current: ${currentPage!0},
                             urlPrefix: "${domain}",
                             isBackend: true,
+                            title: "媒体库",
                             backfun: function(e) {
                                 //console.log(e);//回调
                             }

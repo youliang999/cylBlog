@@ -8,9 +8,10 @@ zblog.upload.uploader=WebUploader.create({
   dnd: '#uploader .upload-list',
   paste: document.body,
   accept:{
-	title: '图片文件',
-	extensions: 'gif,jpg,jpeg,bmp,png',
-	mimeTypes: 'image/*'
+	title: '文件(gif,jpg,jpeg,bmp,png,doc,docx,txt,rar,sql,xls)',
+	extensions: 'gif,jpg,jpeg,bmp,png,doc,docx,txt,rar,sql,xls',
+	// mimeTypes: 'image/*'
+	mimeTypes: '*/*'
   },
   swf:'../../webuploader-0.1.5/js/Uploader.swf',
   disableGlobalDnd: true,

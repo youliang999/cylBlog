@@ -28,6 +28,10 @@
      select id, nickName, realName, role, email, createTime from user
    </select>
 
+    <select id="getListLimit" resultType="User">
+      select id, nickName, realName, role, email, createTime from user order by lastUpdate desc limit #{offset}, #{limit}
+    </select>
+
    <select id="count" resultType="long">
      select count(*) from user
    </select>

@@ -9,7 +9,9 @@ import com.cyl.blog.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("userService")
 public class UserServiceImpl extends BlogBaseServiceImpl implements UserService {
@@ -22,9 +24,12 @@ public class UserServiceImpl extends BlogBaseServiceImpl implements UserService 
       pageIndex = 1;
       pageSize = PAGESIZE;
     }
+    Map<String, Object> data = new HashMap<>();
+    data.put("offset", (pageIndex - 1) * pageSize);
+    data.put("limit", pageSize);
     long totalCount = countUser();
     PageIterator<User> page = PageIterator.createInstance(pageIndex, pageSize, (int)totalCount);
-    super.list(page);
+    page.setData(userMapper.getListLimit(data));
     return page;
   }
   

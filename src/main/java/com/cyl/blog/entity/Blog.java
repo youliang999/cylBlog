@@ -34,7 +34,9 @@ public class Blog extends BaseBlog implements Serializable {
     /* 阅读数 */
     private int rcount = 0;
 
-    private String blogType;
+    private String blog_type;
+
+    private String createDate;
 
     public Blog copy() {
         ByteArrayOutputStream byteOut = null;

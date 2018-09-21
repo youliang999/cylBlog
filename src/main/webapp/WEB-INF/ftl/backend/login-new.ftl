@@ -14,8 +14,31 @@
 //            alert(111);
             $('#tipmessage').hide();
         }
+        function GetUrlParam(paraName) {
+            var url = document.location.toString();
+            var arrObj = url.split("?");
+
+            if (arrObj.length > 1) {
+                var arrPara = arrObj[1].split("&");
+                var arr;
+
+                for (var i = 0; i < arrPara.length; i++) {
+                    arr = arrPara[i].split("=");
+
+                    if (arr != null && arr[0] == paraName) {
+                        return arr[1];
+                    }
+                }
+                return "/backend/index";
+            }
+            else {
+                return "/backend/index";
+            }
+        }
+
         function dosubmit(){
             var baseUrl = "${g.domain}";
+            var url1 = baseUrl;
             var url = baseUrl +"/backend/loginsubmit";
             var userName = $("#username").val();
             var userpwd = $("#userpwd").val();
@@ -36,7 +59,7 @@
                         $('#tipmessage').text(data.msg);
                     } else {
 //                        alert(222);
-                        window.location.reload();
+                        window.location.href=url1 + GetUrlParam("loginInterceptorUrl");
                     }
                 }
             });
@@ -57,7 +80,7 @@
             </label>
             <h2>PASSWORD</h2>
             <label>
-                <input type="password" name="userpwd" id="userpwd" class="txt_input"  onfocus="clear()" value="******">
+                <input type="password" name="userpwd" id="userpwd" class="txt_input"  onfocus="clear()" value="">
             </label>
             <p style="color: red" id="tipmessage"></p>
             <#--<p class="forgot"><a id="iforget" href="javascript:void(0);">Forgot your password?</a></p>-->

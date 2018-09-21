@@ -12,6 +12,7 @@ import com.cyl.blog.entity.solr.SearchResult;
 import com.cyl.blog.helper.ShiroFunctions;
 import com.cyl.blog.plugin.PageIterator;
 import com.cyl.blog.solr.service.BlogIndexService;
+import com.cyl.blog.util.CollectionUtils;
 import com.cyl.blog.util.CookieUtil;
 import com.cyl.blog.util.TagVO;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -70,7 +71,8 @@ public class IndexController extends BaseController{
             mv.addObject("pages", Collections.EMPTY_LIST);
             mv.addObject("totalPages", blogVoPageIterator.getTotalPages());
         } else {
-            log.info("===>>> data:{}", blogVoPageIterator.getData());
+            mv.addObject("totalPages", blogVoPageIterator.getTotalPages());
+            log.info("===>>> data'size:{}", blogVoPageIterator.getData().size());
             mv.addObject("domain", getGlobal().getDomain());
             mv.addObject("pages", blogVoPageIterator.getData());
             mv.addObject("currentPage", page);
@@ -81,12 +83,15 @@ public class IndexController extends BaseController{
     }
     @RequestMapping("/blog/{blogid}")
     public ModelAndView getBlog(@PathVariable("blogid") String bid, HttpServletRequest request) {
+        long start = System.currentTimeMillis();
         ModelAndView mv = new ModelAndView("blog");
         BlogVo blogVo = blogHelper.getBlogVo(bid);
+//        log.info("===>>> blogVocon:{}", blogVo.getContent());
         shiroFunction(mv);
         if(blogVo != null) {
             mv.addObject(WebConstants.PRE_TITLE_KEY, blogVo.getTitle());
             mv.addObject("blog", blogVo);
+//            log.info("===>>> content:{}", blogVo.getContent());
             mv.addObject("commentVos",
                     blogHelper.getCommentsAsTree(bid, new CookieUtil(request, null).getCookie("comment_author")));
             /* 上一篇，下一篇 */
@@ -97,6 +102,7 @@ public class IndexController extends BaseController{
         mv.addObject("recentBlogs", (List<Blog>)dataLoader.get(IndexDataLoader.RECENT_BLOG));
         mv.addObject("tagVOs", (List<TagVO>)dataLoader.get(IndexDataLoader.TAG));
         mv.addObject("categorys", ( List<Category>) dataLoader.get(IndexDataLoader.CATEGORY));
+        log.info("===>>> get blog:{} cost {} ms", bid, System.currentTimeMillis() - start);
         return mv;
     }
     @RequestMapping("/search/{word}")
@@ -143,12 +149,20 @@ public class IndexController extends BaseController{
                     .orElse(Collections.emptyList())
                     .stream()
                     .map(blogIndex -> String.valueOf(blogIndex.getId())).collect(Collectors.toList());
+
             log.info("===>>> bids：{}", bids);
-            List<BlogVo> blogVos = blogHelper.getBlogVOs(bids);
-            mv.addObject("pages", blogVos);
-            mv.addObject("totalCount", totalCount);
-            mv.addObject("totalPages", totalPages);
-            mv.addObject("currentPage", currentPage);
+            if(CollectionUtils.isEmpty(bids)) {
+                mv.addObject("pages", Collections.EMPTY_LIST);
+                mv.addObject("totalCount", 0);
+                mv.addObject("totalPages", 1);
+                mv.addObject("currentPage", currentPage);
+            }  else {
+                List<BlogVo> blogVos = blogHelper.getBlogVOs(bids);
+                mv.addObject("pages", blogVos);
+                mv.addObject("totalCount", totalCount);
+                mv.addObject("totalPages", totalPages);
+                mv.addObject("currentPage", currentPage);
+            }
         }
     }
 

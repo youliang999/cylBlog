@@ -36,6 +36,10 @@ $(function(){
   zblog.post.epiceditor.load();
 });
 
+
+
+
+
 zblog.post.insert=function(){
   var title = $.trim($("#title").val());
   if(title==""){
@@ -57,7 +61,7 @@ zblog.post.insert=function(){
       break;
     default: result="";
     }
-    
+
     return result;
   }
 
@@ -71,6 +75,9 @@ zblog.post.insert=function(){
       };
   if(postid.length>0) data.id=postid;
   $.ajax({
+
+
+
     type:postid > 0?"PUT":"POST",
     url:zblog.getDomainLink("posts"),
     data:data,
@@ -83,9 +90,9 @@ zblog.post.insert=function(){
                 alert("post success!");
             }
 	      // window.location.href="../../../../";
-      }else{
-    	 alert(data.msg);
-      }
+          } else{
+             alert(data.msg);
+          }
      }
   });
 }
@@ -171,5 +178,6 @@ zblog.post.submitfast=function(){
 }
 
 zblog.post.edit=function(postid){
-  window.location.href=zblog.getDomainLink("posts/edit?pid="+postid);
+  window.open(zblog.getDomainLink("posts/edit?pid="+postid));
+  // window.location.href=zblog.getDomainLink("posts/edit?pid="+postid);
 }

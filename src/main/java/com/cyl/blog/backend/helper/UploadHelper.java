@@ -11,6 +11,8 @@ import com.cyl.blog.service.UploadService;
 import com.cyl.blog.service.UserService;
 import com.cyl.blog.util.*;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -26,7 +28,7 @@ import java.util.Date;
  */
 @Controller
 public class UploadHelper {
-
+    private static final Logger log  = LoggerFactory.getLogger(UploadHelper.class);
     @Autowired
     private UploadService uploadService;
     @Autowired
@@ -71,11 +73,12 @@ public class UploadHelper {
         OutputStream out = null;
         try{
             String yearMonth = DateUtils.formatDate("yyyy/MM", create);
-            File parent = new File(WebConstants.APPLICATION_PATH + "/post/uploads", yearMonth);
+            File parent = new File(WebConstants.APPLICATION_PATH + "/blog/uploads", yearMonth);
             if(!parent.exists())
                 parent.mkdirs();
 
             File savePath = FileUtils.determineFile(parent, fileName);
+            log.info("===>>> savePath:{}", savePath.getAbsolutePath());
             IOUtils.copy(resource.getInputStream(), out = new FileOutputStream(savePath));
 
             upload = new Upload();

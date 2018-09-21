@@ -128,16 +128,31 @@
 
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="com.cyl.blog.interceptors.SessionBindInterceptor">
+            <bean class="com.cyl.blog.interceptors.VisitRecordInterceptor">
                 <property name="excludeUrlPatterns">
                     <list>
-                        <value>/backend/login</value>
-                        <value>/backend/loginsubmit</value>
-                        <value>/backend/logout</value>
+                        <!--<value>/backend/login</value>-->
+                        <!--<value>/backend/loginsubmit</value>-->
+                        <!--<value>/backend/logout</value>-->
                     </list>
                 </property>
             </bean>
         </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.cyl.blog.interceptors.SessionBindInterceptor">
+                <property name="excludeUrlPatterns">
+                    <list>
+                        <!--<value>/backend/login</value>-->
+                        <!--<value>/backend/loginsubmit</value>-->
+                        <!--<value>/backend/logout</value>-->
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+
+
 
     </mvc:interceptors>
 </beans>

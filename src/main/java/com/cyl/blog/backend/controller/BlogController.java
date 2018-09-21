@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by youliang.cheng on 2018/9/6.
@@ -64,7 +61,7 @@ public class BlogController extends BaseController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public Object insert(Blog post, String tags){
-        log.info("===>>> blog:{}", new Gson().toJson(post));
+        log.info("===>>> blog:{}", new Gson().toJson(post.getTitle()));
         Map<String,Object> form = PostFormValidator.validatePublish(post);
         if(!form.isEmpty()){
             log.info("===>>> form:{}", new Gson().toJson(form));
@@ -78,14 +75,20 @@ public class BlogController extends BaseController {
         post.setLastUpdate(post.getCreateTime());
 
     /* 由于加入xss的过滤,html内容都被转义了,这里需要unescape */
-        String content = HtmlUtils.htmlUnescape(post.getContent());
+//        String content = HtmlUtils.htmlUnescape(post.getContent());
+        String content = post.getContent();
         post.setContent(JsoupUtils.filter(content));
         String cleanTxt = JsoupUtils.plainText(content);
         post.setExcerpt(cleanTxt.length() > PostConstants.EXCERPT_LENGTH ? cleanTxt.substring(0,
                 PostConstants.EXCERPT_LENGTH) : cleanTxt);
-
-        blogHelper.insertBlog(post, PostTagHelper.from(post, tags, post.getCreator()));
         Map<String, Object> data = new HashMap<String, Object>();
+        List<Blog> bs = blogService.getBlogByTitle(post.getTitle());
+        if( bs != null && CollectionUtils.isNotEmpty(bs)) {
+            data.put("success", false);
+            data.put("msg", "博客已存在!");
+            return new Gson().toJson(data);
+        }
+        blogHelper.insertBlog(post, PostTagHelper.from(post, tags, post.getCreator()));
         data.put("success", true);
         return new Gson().toJson(data);
     }
@@ -134,7 +137,7 @@ public class BlogController extends BaseController {
 
         post.setType(PostConstants.TYPE_POST);
         post.setLastUpdate(new Date());
-        blogHelper.updateBlog(post, PostTagHelper.from(post, tags, WebContextFactory.get().getUser().getId()), true);
+         blogHelper.updateBlog(post, PostTagHelper.from(post, tags, WebContextFactory.get().getUser().getId()), true);
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("success", true);
         return new Gson().toJson(data);
@@ -149,7 +152,7 @@ public class BlogController extends BaseController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public ModelAndView edit(String pid){
-        ModelAndView mv = new ModelAndView("backend/new/edit");
+        ModelAndView mv = new ModelAndView("backend/new/post/ueedit");
         if(!StringUtils.isBlank(pid)){
             BlogVo blogVo = blogHelper.getBlogVo(pid);
             mv.addObject("post", blogVo);

@@ -2,7 +2,7 @@
 "/resource/js/backend/admin.comment.js"
 ]/>
 <@page isBackend=true assets=assets>
-    <div class="col-sm-9 col-md-10">
+    <div class="col-sm-9 col-md-10 bdiv">
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li class="active">留言</li>
@@ -13,13 +13,13 @@
             <ul class="table-nav">
                 <li><a class="<#if type=='all'>active</#if>" href="?type=all">全部</a> | </li>
                 <li><a class="<#if type=='wait'>active</#if>" href="?type=wait">待审
-                    <#if stat.wait!=null><span>(${stat.wait})</span></#if> | </a>
+                    <#if stat.wait??><span>(${stat.wait!})</span></#if> | </a>
                 </li>
                 <li><a class="<#if type=='approve'>active</#if>" href="?type=approve">获准
-                    <#if stat.approve!=null><span>(${stat.approve})</span></#if> | </a>
+                    <#if stat.approve??><span>(${stat.approve!})</span></#if> | </a>
                 </li>
                 <li><a class="<#if type=='trash'>active</#if>" href="?type=trash">垃圾评论
-                    <#if stat.trash!=null>span>(${stat.trash})</span></#if></a>
+                    <#if stat.trash??>span>(${stat.trash!})</span></#if></a>
                 </li>
             </ul>
             <table id="post-table" class="table table-striped list-table">
@@ -38,7 +38,7 @@
                         <a href="#">${comment.ip!}</a></td>
                         <td><div>提交于<a href="${g.domain}/blog/${comment.postid!}/#comment-${comment.id!}" target="_blank">
                             ${comment.createTime?string("yyyy-MM-dd ahh:mm")!}</a>
-                            <#if comment.pid!=null>| 回复给
+                            <#if comment.pid??>| 回复给
                                 <a href="${g.domain}/blog/${comment.postid!}/#comment-${comment.pid!}" target="_blank">${comment.pcreator!}</a>
                             </#if>
                         </div>
@@ -85,6 +85,7 @@
                             current: ${currentPage!0},
                             urlPrefix: "${domain}",
                             isBackend: true,
+                            title: "评论",
                             backfun: function(e) {
                                 //console.log(e);//回调
                             }

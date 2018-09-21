@@ -4,10 +4,35 @@
 
 <mapper namespace="com.cyl.blog.service.mapper.CommentMapper">
 
+
+    <select id="loadById" parameterType="java.lang.String" resultType="Comment">
+        select id, postid, parent, email, url, ip, agent, content, status, creator, createTime from comment where id = #{id}
+    </select>
+
+    <select id="listRecent" resultType="CommentVO">
+        select * from comment c order by c.createTime desc limit 10
+    </select>
+
     <select id="listByPost" parameterType="Map" resultType="CommentVO">
         select id, content, creator, url, status, parent, createTime from comment c
         where postid=#{postid} and (status='approve' <if test="creator!=null and creator!=''"> or creator=#{creator} </if>)
         order by c.createTime desc
+    </select>
+
+
+    <select id="listCountByGroupStatus" resultType="Map">
+        select status, count(*) as count from comment group by status
+    </select>
+
+    <select id="listByStatus" parameterType="Map" resultType="Map">
+        select c.id, c.postid, c.url, c.email, c.ip, c.content, c.creator, c.status, c.createTime, p.title, t.id as pid, t.creator as pcreator
+        from comment c left join post p on c.postid=p.id left join comment t on c.parent=t.id
+        where c.status in <foreach collection="status" open="(" close=")" item="item" separator=",">#{item}</foreach> limit #{offset}, #{limit}
+    </select>
+
+    <select id="countByStatus" parameterType="Map" resultType="java.lang.Integer">
+        select count(1) from comment c left join post p on c.postid=p.id left join comment t on c.parent=t.id
+        where c.status in <foreach collection="status" open="(" close=")" item="item" separator=",">#{item}</foreach> limit #{offset}, #{limit}
     </select>
 
     <select id="count" resultType="long">
@@ -22,4 +47,8 @@
     <update id="setStatus" parameterType="Map">
         update comment set status=#{status} where id=#{commentid}
     </update>
+
+    <delete id="deleteById">
+        delete from comment where id = #{id}
+    </delete>
 </mapper>

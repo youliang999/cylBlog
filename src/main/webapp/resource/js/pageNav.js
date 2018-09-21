@@ -13,7 +13,7 @@
 					/*上一页*/
                     if (pageinit.current > 1) {
                         var link = pageinit.urlPrefix + "/" + (pageinit.current - 1);
-                        var title = "所有博客"
+                        var title = pageinit.title;
                         obj.append('<a data-href=' + link + ' data-title='+ title +'   class="prebtn">上一页</a>');
                     } else{
                         obj.remove('.prevPage');
@@ -23,8 +23,8 @@
                     if (pageinit.current >4 && pageinit.pageNum > 4) {
                         var link1 = pageinit.urlPrefix + "/" +  1;
                         var link2 = pageinit.urlPrefix + "/" + 2;
-                        var title1 = "所有博客";
-                        var title2 = "所有博客";
+                        var title1 = pageinit.title;;
+                        var title2 = pageinit.title;;
                         obj.append('<a data-href=' + link1 + ' data-title='+ title1 +' class="zxfPagenum">'+1+'</a>');
                         obj.append('<a data-href=' + link2 + ' data-title='+ title2 +' class="zxfPagenum">'+2+'</a>');
                         obj.append('<span>...</span>');
@@ -42,11 +42,11 @@
                                 obj.append('<span class="current">'+ start +'</span>');
                             } else if(start == pageinit.current+1){
                                 var link = pageinit.urlPrefix + "/" + start;
-                                var title = "所有博客";
+                                var title = pageinit.title;;
                                 obj.append('<a data-href=' + link + '  data-title='+ title +' class="zxfPagenum nextpage">'+ start +'</a>');
                             }else{
                                 var link = pageinit.urlPrefix + "/" + start;
-                                var title = "所有博客";
+                                var title = pageinit.title;;
                                 obj.append('<a data-href=' + link + '  data-title='+ title +' class="zxfPagenum">'+ start +'</a>');
                             }
                         }
@@ -60,7 +60,7 @@
                         obj.append('<span class="disabled">下一页</span>');
                     } else{
                         var link = pageinit.urlPrefix + "/" + (pageinit.current + 1);
-                        var title = "所有博客";
+                        var title = title;
                         obj.append('<a data-href=' + link + ' data-title='+ title +' class="nextbtn">下一页</a>');
                     }
 					/*尾部*/
@@ -128,25 +128,31 @@
 		bindEvent:function(obj,pageinit){
 			return (function(){
 				obj.on("click","a.prebtn",function(){
-					var cur = parseInt(obj.children("span.current").text());
-					var current = $.extend(pageinit, {"current":cur-1});
-					zp.addhtml(obj,current);
+                    if(pageinit.isBackend) {
+                        var cur = parseInt(obj.children("span.current").text());
+                        var current = $.extend(pageinit, {"current":cur-1});
+                        zp.addhtml(obj,current);
+                    }
 					if (typeof(pageinit.backfun)=="function") {
 						pageinit.backfun(current);
 					}
 				});
 				obj.on("click","a.zxfPagenum",function(){
-					var cur = parseInt($(this).text());
-					var current = $.extend(pageinit, {"current":cur});
-					zp.addhtml(obj,current);
+                    if(pageinit.isBackend) {
+                        var cur = parseInt($(this).text());
+                        var current = $.extend(pageinit, {"current": cur});
+                        zp.addhtml(obj, current);
+                    }
 					if (typeof(pageinit.backfun)=="function") {
 						pageinit.backfun(current);
 					}
 				});
 				obj.on("click","a.nextbtn",function(){
-					var cur = parseInt(obj.children("span.current").text());
-					var current = $.extend(pageinit, {"current":cur+1});
-					zp.addhtml(obj,current);
+                    if(pageinit.isBackend) {
+                        var cur = parseInt(obj.children("span.current").text());
+                        var current = $.extend(pageinit, {"current": cur + 1});
+                        zp.addhtml(obj, current);
+                    }
 					if (typeof(pageinit.backfun)=="function") {
 						pageinit.backfun(current);
 					}
@@ -177,6 +183,7 @@
 			current : 1,
 			urlPrefix: "",
 			isBackend:false,
+            title:"cblog",
 			backfun : function(){}
 		},options);
 		if(pageinit.pageNum > 1)

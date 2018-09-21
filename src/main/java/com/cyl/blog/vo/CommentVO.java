@@ -21,6 +21,15 @@ public class CommentVO extends Comment implements TreeItem<CommentVO>,Serializab
   private static final long serialVersionUID = 6593096533331366003L;
   private Blog blog;
   private List<CommentVO> children;
+  private String createDate;
+
+  public String getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(String createDate) {
+    this.createDate = createDate;
+  }
 
   public Blog getBlog(){
     return blog;

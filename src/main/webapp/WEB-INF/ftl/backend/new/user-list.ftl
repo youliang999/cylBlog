@@ -2,7 +2,7 @@
 "/resource/js/backend/admin.user.js"
 ]/>
 <@page isBackend=true assets=assets>
-    <div class="col-sm-9 col-md-10">
+    <div class="col-sm-9 col-md-10 bdiv">
     <ol class="breadcrumb header">
         <li><span class="icon glyphicon glyphicon-home"></span>主菜单</li>
         <li class="active">用户</li>
@@ -46,6 +46,7 @@
                             current: ${currentPage!0},
                             urlPrefix: "${domain}",
                             isBackend: true,
+                            title: "所有用户",
                             backfun: function(e) {
                                 //console.log(e);//回调
                             }

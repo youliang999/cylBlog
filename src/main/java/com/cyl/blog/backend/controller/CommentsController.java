@@ -5,8 +5,10 @@ import com.cyl.blog.constants.CommentConstants;
 import com.cyl.blog.controller.BaseController;
 import com.cyl.blog.plugin.PageIterator;
 import com.cyl.blog.service.CommentService;
-import com.cyl.blog.vo.CommentVO;
+import com.google.gson.Gson;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,19 +27,20 @@ import java.util.Map;
 @RequestMapping("/backend/comments")
 @RequiresRoles("admin")
 public class CommentsController extends BaseController{
-
+    private static final Logger log  = LoggerFactory.getLogger(CommentsController.class);
     @Autowired
     private CommentService commentService;
     @Autowired
     private CommentHelper commentHelper;
 
     @RequestMapping(value = "{page}", method = RequestMethod.GET)
-    public ModelAndView index(@RequestParam(value = "page", defaultValue = "1") int page,
+    public ModelAndView index(@PathVariable(value = "page") int page,
                         @RequestParam(value = "type", defaultValue = "all") String type, Model model){
         ModelAndView mv = new ModelAndView("backend/new/comment-list");
         Collection<String> status = "all".equals(type) ? Arrays.asList(CommentConstants.TYPE_APPROVE,
                 CommentConstants.TYPE_WAIT) : Arrays.asList(type);
-        PageIterator<CommentVO> pageModel = commentService.listByStatus(page, 15, status);
+        log.info("===>>> status:{}", new Gson().toJson(status));
+        PageIterator<Map> pageModel = commentService.listByStatus(page, 15, status);
         mv.addObject("comments", pageModel.getData());
         mv.addObject("currentPage", page);
         mv.addObject("totalPages", pageModel.getTotalPages());

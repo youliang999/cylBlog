@@ -56,6 +56,12 @@ linkExtend=[]>
         <link rel="stylesheet" type="text/css" href="${g.domain}/resource/js/newbackend/static/h-ui.admin/css/style.css" />
         <script type="text/javascript" src="${g.domain}/resource/js/newbackend/static/h-ui/js/H-ui.min.js"></script>
         <script type="text/javascript" src="${g.domain}/resource/js/newbackend/static/h-ui.admin/js/H-ui.admin.js"></script>
+        <style type="text/css">
+            .bdiv {
+                width: 95%;
+                margin-left: 20px;
+            }
+        </style>
     </#if>
     <@AssetsImport assets />
 <body>

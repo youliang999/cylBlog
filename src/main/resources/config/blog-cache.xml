@@ -28,4 +28,11 @@
         </constructor-arg>
     </bean>
 
+    <bean id="visitCache" class="com.cyl.blog.service.jedis.impl.JedisOperationServiceImpl">
+        <constructor-arg index="0">
+            <bean class="com.cyl.blog.service.jedis.impl.StringsSerializer">
+            </bean>
+        </constructor-arg>
+    </bean>
+
 </beans>

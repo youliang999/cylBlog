@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cyl.blog.service.mapper.VisitMapper">
+
+    <insert id="insertVisitRecord" parameterType="VisitInfo">
+        insert into tb_visit_record(ip, cookie, visitUrl, visitDate, createDate)
+        VALUE (#{ip}, #{cookie}, #{visitUrl}, #{visitDate}, now());
+    </insert>
+
+    <select id="countPvByDate" parameterType="java.util.Map" resultType="int">
+        select count(1) from tb_visit_record where visitDate &lt;= #{startDate}  and  visitDate &gt;= #{endDate}
+    </select>
+
+    <select id="countUvByDate" parameterType="java.util.Map" resultType="int">
+        select count(DISTINCT ip) from tb_visit_record where visitDate &lt;= #{startDate}  and  visitDate &gt;= #{endDate}
+    </select>
+
+    <select id="getPvByDate" parameterType="java.lang.String" resultType="int">
+        SELECT pv from tb_user_visit where visitDate = #{searchDate}
+    </select>
+
+    <select id="getUvByDate" parameterType="java.lang.String" resultType="int">
+        SELECT pv from tb_user_visit where visitDate = #{searchDate}
+    </select>
+
+    <select id="countVisitInfo" parameterType="java.util.Map" resultType="int">
+        select count(1) from tb_visit_record where visitDate &lt;= #{startDate}  and  visitDate &gt;= #{endDate} limit #{offset}, #{limit}
+    </select>
+
+    <select id="getVisitInfo" parameterType="java.util.Map" resultType="VisitInfo">
+        select * from tb_visit_record where visitDate &lt;= #{startDate}  and  visitDate &gt;= #{endDate} limit #{offset}, #{limit}
+    </select>
+
+    <select id="getVisitInfo2" parameterType="java.lang.String" resultType="VisitInfo2">
+        SELECT * from tb_user_visit where visitDate = #{searchDate}
+    </select>
+
+</mapper>

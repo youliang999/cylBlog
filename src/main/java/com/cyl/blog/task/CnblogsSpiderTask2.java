@@ -166,7 +166,7 @@ public class CnblogsSpiderTask2 {
                         blog.setCcount(0);
                         blog.setRcount(0);
                         blog.setCreator(blogVo.getUser().getId());
-                        blog.setBlogType("nosql");
+                        blog.setBlog_type("nosql");
                         blog.setCreateTime(new Date());
                         blog.setLastUpdate(new Date());
                         String content = "";
