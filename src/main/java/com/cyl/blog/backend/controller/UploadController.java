@@ -8,7 +8,6 @@ import com.cyl.blog.backend.vo.UploadVO;
 import com.cyl.blog.controller.BaseController;
 import com.cyl.blog.helper.WebContextFactory;
 import com.cyl.blog.plugin.PageIterator;
-import com.google.gson.Gson;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
@@ -16,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,7 +44,7 @@ public class UploadController extends BaseController{
     public ModelAndView index(@PathVariable(value = "page") int page){
         ModelAndView mv = new ModelAndView("backend/new/upload-list");
         PageIterator<UploadVO> pages = uploadHelper.list(page, 15);
-        log.info("===>>> pages:{}", new Gson().toJson(pages.getData()));
+//        log.info("===>>> pages:{}", new Gson().toJson(pages.getData()));
         mv.addObject("uploads", pages.getData());
         mv.addObject("currentPage", page);
         mv.addObject("totalPages", pages.getTotalPages());
@@ -86,5 +88,6 @@ public class UploadController extends BaseController{
     public Object ueditor(ServletRequestReader reader){
         return ueditor.server(reader);
     }
+
 
 }

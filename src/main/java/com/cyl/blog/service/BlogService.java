@@ -18,6 +18,8 @@ public interface BlogService extends BlogBaseService{
 
     boolean delById(String id);
 
+    List<Blog> getBlogByCondition(int start, int limit);
+
     PageIterator<Blog> getBlogs(int page, int pageSize);
 
     PageIterator<BlogVo> getBlogVos(int page, int pageSize);
@@ -47,5 +49,8 @@ public interface BlogService extends BlogBaseService{
     Blog getBlogById(String id);
 
     int addCcount(String commentid, int count);
+
+
+    boolean insertBlogV2(Blog blog);
 
 }

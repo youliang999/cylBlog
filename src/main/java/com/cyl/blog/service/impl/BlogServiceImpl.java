@@ -1,9 +1,7 @@
 package com.cyl.blog.service.impl;
 
 import com.cyl.blog.controller.index.model.BlogVo;
-import com.cyl.blog.entity.Blog;
-import com.cyl.blog.entity.Category;
-import com.cyl.blog.entity.User;
+import com.cyl.blog.entity.*;
 import com.cyl.blog.plugin.PageIterator;
 import com.cyl.blog.service.BlogService;
 import com.cyl.blog.service.CategoryService;
@@ -11,8 +9,11 @@ import com.cyl.blog.service.TagService;
 import com.cyl.blog.service.UserService;
 import com.cyl.blog.service.handler.IndexHandler;
 import com.cyl.blog.service.mapper.BaseMapper;
+import com.cyl.blog.service.mapper.BlogContentMapper;
 import com.cyl.blog.service.mapper.BlogMapper;
+import com.cyl.blog.service.mapper.BlogV1Mapper;
 import com.cyl.blog.util.CollectionUtils;
+import com.cyl.blog.util.StringUtils;
 import com.dajie.common.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,10 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     private UserService userService;
     @Autowired
     private IndexHandler indexHandler;
+    @Autowired
+    private BlogV1Mapper blogV1Mapper;
+    @Autowired
+    private BlogContentMapper blogContentMapper;
 
     @Override
     public boolean insertBlog(Blog blog) {
@@ -82,6 +87,14 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         return true;
     }
 
+    @Override
+    public List<Blog> getBlogByCondition(int start, int limit) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("start", start);
+        map.put("limit", limit);
+        return  blogMapper.getBlogsByCondition(map);
+    }
+
     public PageIterator<Blog> getBlogs(int page, int pageSize) {
         if(page <=0 || pageSize <= 0) {
             page = 1;
@@ -105,12 +118,15 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
             pageSize = PAGESIZE;
         }
         int totalCount = countBlog();
+        log.info("===>>> get total cost:{} ms", System.currentTimeMillis() - start);
         PageIterator<BlogVo> pageIterator = PageIterator.createInstance(page, pageSize, totalCount);
+
         Map<String, Object> map = new HashMap<>();
         map.put("offset", (page-1)*pageSize);
         map.put("limit", pageSize);
-        List<Blog> blogs = blogMapper.getBlogs(map);
-        log.info("===>>> get cost:{} ms", System.currentTimeMillis() - start);
+
+        List<BlogV1> blogs = blogV1Mapper.getBlogs(map);
+        log.info("===>>> !!!get cost:{} ms", System.currentTimeMillis() - start);
 //        long start1 = System.currentTimeMillis();
 //        List<BlogVo> blogVos = Optional.ofNullable(blogs)
 //                .orElse(Collections.emptyList())
@@ -135,7 +151,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         Map<String, Object> map = new HashMap<>();
         map.put("offset", (page-1)*pageSize);
         map.put("limit", pageSize);
-        List<Blog> blogs = blogMapper.getAllBlogs(map);
+        List<BlogV1> blogs = blogV1Mapper.getAllBlogs(map);
         pageIterator.setData(makeBlogVOs(blogs));
         log.info("===>>> makeBlogVos cost:{} ms", System.currentTimeMillis() - start);
         return pageIterator;
@@ -261,13 +277,22 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         return blogVo;
     }
 
-    private List<BlogVo> makeBlogVOs(List<Blog> blogs) {
+    private List<BlogVo> makeBlogVOs(List<BlogV1> blogs) {
+        List<Integer> bids = blogs.stream()
+                .map(blog -> Integer.valueOf(blog.getId()))
+                .collect(Collectors.toList());
         List<String> uids = blogs.stream()
                 .map(blog -> blog.getCreator())
                 .collect(Collectors.toList());
         List<String> cids = blogs.stream()
                 .map(blog -> blog.getCategoryid())
                 .collect(Collectors.toList());
+        log.info("===>>>bids:{} ", bids);
+        Map<Integer, BlogContent> contentMap = Optional.ofNullable(blogContentMapper.getByIds(bids))
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.toMap(BlogContent::getBlog_id, Function.identity(),  (u1, u2) -> u2));
+
         Map<String, User> userMap = Optional.ofNullable(userService.getByUserIds(uids))
                 .orElse(Collections.emptyList())
                 .stream()
@@ -282,9 +307,11 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
             if(blog != null) {
                 Category category = categoryMap.get(blog.getCategoryid());
                 User user = userMap.get(blog.getCreator());
+                Integer id = Integer.valueOf(blog.getId());
+                BlogContent content = contentMap.get(id);
                 blogVo.setTitle(blog.getTitle())
-                        .setExcerpt(blog.getExcerpt())
-                        .setContent(blog.getContent())
+                        .setExcerpt(content == null ? "" : content.getExcerpt())
+                        .setContent(content == null ? "" : content.getContent())
                         .setType(blog.getType())
                         .setParent(blog.getParent())
                         .setCategoryid(blog.getCategoryid())
@@ -354,5 +381,43 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
      */
     public int addCcount(String commentid, int count){
         return blogMapper.addCcount(commentid, count);
+    }
+
+
+    @Override
+    public boolean insertBlogV2(Blog blog) {
+        int a = 0;
+        int b = 0;
+        if(blogV1Mapper.getById(Integer.valueOf(blog.getId())) == null) {
+            BlogV1 blogV1 = new BlogV1();
+            blogV1.setId(blog.getId());
+            blogV1.setTitle(blog.getTitle());
+            blogV1.setType(blog.getType());
+            blogV1.setParent(blog.getParent());
+            blogV1.setCategoryid(blog.getCategoryid());
+            blogV1.setPstatus(blog.getPstatus());
+            blogV1.setCstatus(blog.getCstatus());
+            blogV1.setCcount(blog.getCcount());
+            blogV1.setRcount(blog.getRcount());
+            blogV1.setCreator(blog.getCreator());
+            blogV1.setBlog_type(blog.getBlog_type());
+            blogV1.setCreateTime(blog.getCreateTime());
+            blogV1.setLastUpdate(blog.getLastUpdate());
+            a = blogV1Mapper.insertBlogV1(blogV1);
+        }
+        if(blogContentMapper.getById(Integer.valueOf(blog.getId())) == null) {
+            BlogContent blogContent = new BlogContent();
+            blogContent.setBlog_id(Integer.valueOf(blog.getId()));
+            blogContent.setContent(StringUtils.isBlank(blog.getContent()) ? "" : blog.getContent());
+            blogContent.setExcerpt(StringUtils.isBlank(blog.getExcerpt()) ? "" : blog.getExcerpt());
+            b = blogContentMapper.insertBlogContent(blogContent);
+        }
+        if(a==0 && b==0) {
+            return true;
+        }
+        if(a > 0 || b > 0) {
+            return true;
+        }
+        return false;
     }
 }

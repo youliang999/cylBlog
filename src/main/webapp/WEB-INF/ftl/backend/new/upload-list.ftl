@@ -22,8 +22,12 @@
                 <tbody>
                 <#if uploads??>
                     <#list uploads as upload>
-                    <tr><td><img src="${g.domain}${upload.path!}" width="80" height="50" /></td>
-                        <td class="filename"><strong>${upload.name!}</strong><p class="fileformat">${upload.fileExt!}</p>
+                    <tr>
+                        <td>
+                            <img src="${g.domain}/resource/img/fileIcon/${upload.suffix!"image"}.jpg" width="80" height="50" />
+                        </td>
+                        <td class="filename"><strong>${upload.name!}</strong>
+                            <#--<p class="fileformat">${upload.fileExt!}</p>-->
                             <div class="row-action">
                                 <span><a href="javascript:zblog.upload.remove('${upload.id}');">永久删除</a>&nbsp;|&nbsp;</span>
                                 <span><a href="${g.domain}/${upload.path!}">查看</a></span>

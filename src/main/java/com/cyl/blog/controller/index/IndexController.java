@@ -113,6 +113,9 @@ public class IndexController extends BaseController{
         mv.addObject("domain", getGlobal().getDomain() +"/search/" + word);
         mv.addObject("search", word);
         mv.addObject(WebConstants.PRE_TITLE_KEY, word);
+        mv.addObject("recentBlogs", (List<Blog>)dataLoader.get(IndexDataLoader.RECENT_BLOG));
+        mv.addObject("tagVOs", (List<TagVO>)dataLoader.get(IndexDataLoader.TAG));
+        mv.addObject("categorys", ( List<Category>) dataLoader.get(IndexDataLoader.CATEGORY));
         return mv;
     }
 

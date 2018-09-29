@@ -18,4 +18,5 @@ public class UploadVO extends Upload implements Serializable{
   private Blog post;
   private User user;
   private String fileExt;
+  private String suffix;
 }

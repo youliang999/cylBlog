@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.blog.service.mapper.BlogContentMapper">
+
+    <insert id="insertBlogContent" parameterType="BlogContent">
+        insert into tb_blog_content(blog_id, excerpt, content)
+        values(#{blog_id},#{excerpt},#{content})
+    </insert>
+
+    <select id="getByIds" parameterType="java.util.List" resultType="BlogContent">
+        SELECT * from tb_blog_content  where blog_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer" resultType="BlogContent">
+        SELECT * from tb_blog_content where blog_id = #{id}
+    </select>
+</mapper>

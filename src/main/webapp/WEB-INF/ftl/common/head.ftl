@@ -11,8 +11,8 @@
     </div>
     <h1 id="logo" style="
     font-family: &quot;Century Gothic&quot;;
-    font-size: 40px;
-    font-weight: normal;
+    font-size: 45px;
+    font-weight: bold;
     line-height: 100%;
     margin: 62px 0 5px 4%;
 "><a href="">Cblog - youliang.cheng</a></h1>

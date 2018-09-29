@@ -16,6 +16,8 @@
         <typeAlias alias="Link" type="com.cyl.blog.backend.vo.Link"/>
         <typeAlias alias="VisitInfo" type="com.cyl.blog.entity.VisitInfo"/>
         <typeAlias alias="VisitInfo2" type="com.cyl.blog.entity.VisitInfo2"/>
+        <typeAlias alias="BlogV1" type="com.cyl.blog.entity.BlogV1"/>
+        <typeAlias alias="BlogContent" type="com.cyl.blog.entity.BlogContent"/>
     </typeAliases>
     <!--<mappers>-->
         <!--<mapper resource="mappers/BlogMapper.xml"/>-->

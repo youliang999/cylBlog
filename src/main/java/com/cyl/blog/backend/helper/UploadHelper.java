@@ -1,5 +1,6 @@
 package com.cyl.blog.backend.helper;
 
+import com.cyl.blog.backend.enums.FileTypeEnum;
 import com.cyl.blog.backend.vo.Upload;
 import com.cyl.blog.backend.vo.UploadVO;
 import com.cyl.blog.constants.WebConstants;
@@ -48,7 +49,10 @@ public class UploadHelper {
             }
             User user = userService.loadById(upload.getCreator());
             upload.setUser(user);
-            upload.setFileExt(fileExt(upload.getName()));
+            String extName = fileExt(upload.getName());
+            upload.setFileExt(extName);
+//            log.info("===>>> extName:{}",extName);
+            upload.setSuffix(FileTypeEnum.getSuffix(extName));
         }
 
         return result;
@@ -107,7 +111,7 @@ public class UploadHelper {
     public void removeUpload(String uploadid){
         Upload upload = uploadService.loadById(uploadid);
         uploadService.deleteById(uploadid);
-        File file = new File(WebConstants.APPLICATION_PATH, upload.getPath());
+        File file = new File(WebConstants.APPLICATION_PATH , upload.getPath());
         if(file.exists())
             file.delete();
 
@@ -117,5 +121,13 @@ public class UploadHelper {
             parent.delete();
             parent = parent.getParentFile();
         }
+    }
+
+    public String getFilePath(String uploadId) {
+        Upload upload = uploadService.loadById(uploadId);
+        if(upload == null) {
+            return "";
+        }
+        return upload.getPath();
     }
 }

@@ -8,6 +8,9 @@
         <result column="title" property="title" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <select id="getBlogsByCondition" parameterType="Map" resultType="Blog">
+         SELECT * from post where id > #{start} order by id asc limit #{limit}
+    </select>
 
     <select id="getNextBid" parameterType="java.lang.String" resultType="java.lang.String">
         select id from post where type='post' and pstatus = 1  and createTime >

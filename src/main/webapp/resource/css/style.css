@@ -62,13 +62,13 @@ button::-moz-focus-inner, input::-moz-focus-inner { border:0; padding:0; }
 body{margin:0;/*body默认有8个margin*/font-family:Arial,Helvetica,sans-serif; color:#666;min-width:1100px;font-size: 14px;
    background-attachment: scroll;background-image: url("../img/background.gif");background-position: left top;background-repeat: repeat;}
 a{color:#333; }
-a:hover{color: #009dc4;}
+a:hover{color: #333;}
 
 /*************** header *********/
 #header{background: url("../img/background_header.gif") repeat-x scroll left bottom #fff;border-bottom: 1px solid #ccc;height: 230px;position: absolute; right: 0;top: 0;width: 86%;z-index: 5;}
 #header a:hover{text-decoration: none;}
 #logo{font-family: "Century Gothic";font-size: 18px;font-weight: normal;line-height: 100%;margin: 6px 0 3px 4%;}
-#logo a{color: #009dc4;}
+#logo a{color: #333;}
 #tagline{border-top: 1px solid #bbbbbb;color: #888;border-top: 1px solid #bbb;display: block;font-size: 14px;font-weight: normal;margin: 0 4%;padding: 5px 0 0 10px;}
 
 
@@ -103,7 +103,7 @@ a:hover{color: #009dc4;}
 .post_content p.excerpt{text-indent: 1.5em;}
 /* read more link */
 .post a.more_link{background-color:#f2f2f2;border-radius: 3px;color: #666;display: inline-block;font-size: 12px;height: 35px;line-height: 35px;padding: 0 36px;text-decoration: none;}
-.post a.more_link:hover{color:#fff;background-color:#009dc4;}   
+.post a.more_link:hover{color:#fff;background-color:#333;}
 .post p.back{text-align: center;}
 .post p.back a:before{content: "\e60a";font-family: "icomoon-zblog";padding-right: 5px;}
 
@@ -127,8 +127,8 @@ a:hover{color: #009dc4;}
 .post th{background:#eee; font-weight:normal;}
 /* block quote */
 .post blockquote{margin:0 0 1em 0; padding:50px 50px 40px; background:#fefefe; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px; position:relative; border:1px solid #ccc; }
-.post blockquote:before{content: '"'; font-style:italic; font-size:40px; font-weight:bold; line-height:40px; width:30px; height:30px; position:absolute; top:20px; left:20px; color:#aaa; }
-.post blockquote:after{content: '"'; font-style:italic; font-size:40px; font-weight:bold; text-align:left; line-height:60px; width:30px; height:30px; position:absolute; bottom:20px; right:20px; color:#aaa; }
+.post blockquote:before{content: '"'; font-style:italic; /*font-size:40px;*/ font-weight:bold; line-height:40px; width:30px; height:30px; position:absolute; top:20px; left:20px; color:#aaa; }
+    .post blockquote:after{content: '"'; font-style:italic; /*font-size:40px;*/ font-weight:bold; text-align:left; line-height:60px; width:30px; height:30px; position:absolute; bottom:20px; right:20px; color:#aaa; }
 /* list */
 .post li, .post dt, .post dd{margin:0; line-height:150%;}
 .post ul li{background:url(../img/bullet.png) no-repeat left 0.9em; padding:0 0 0 9px;}
@@ -175,8 +175,8 @@ a:hover{color: #009dc4;}
 #page_nav ul{ margin:0; }
 #page_nav li{ float:left;margin-right: 5px;}
 #page_nav a, #page_nav a:hover, #page_nav span{text-decoration:none; color:#666; font-size:11px; padding:13px 13px; line-height:100%; margin:0 4px 4px 0;/* background:#eee; *//*display:block;*/ -moz-border-radius:3px; -khtml-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; }
-#page_nav a:hover{color:#fff; text-decoration:none;background-color:#009dc4;}
-#page_nav .zxfokbtn:hover{color:#fff; text-decoration:none;background-color:#009dc4;}
+#page_nav a:hover{color:#fff; text-decoration:none;background-color:#333;}
+#page_nav .zxfokbtn:hover{color:#fff; text-decoration:none;background-color:#333;}
 #page_nav span.dots{background:none; color:#333; }
 #page_nav span.current{color:#fff; background:#aaaeaf; }
 
@@ -292,5 +292,5 @@ ul.comment-name-date li{padding: 0 0 5px;}
 #return_top{position:fixed; bottom:15px; right:20px; display:block;_display:none;text-indent:100%;white-space:nowrap; width:45px; height:45px; margin:0; padding:0; 
   background:url(../img/return_top2.gif) no-repeat center center #555;overflow:hidden;border-radius:4px; opacity:0.5;
 }
-#return_top:hover{opacity:1;background-color: #009dc4; }
+#return_top:hover{opacity:1;background-color: #333; }
 
