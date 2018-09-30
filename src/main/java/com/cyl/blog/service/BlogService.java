@@ -18,7 +18,7 @@ public interface BlogService extends BlogBaseService{
 
     boolean delById(String id);
 
-    List<Blog> getBlogByCondition(int start, int limit);
+//    List<Blog> getBlogByCondition(int start, int limit);
 
     PageIterator<Blog> getBlogs(int page, int pageSize);
 
@@ -48,9 +48,13 @@ public interface BlogService extends BlogBaseService{
 
     Blog getBlogById(String id);
 
+    List<Blog> getBlogsByIds(List<String> ids);
+
     int addCcount(String commentid, int count);
 
-
+    /**
+     * 只做导数据用
+     */
     boolean insertBlogV2(Blog blog);
 
 }

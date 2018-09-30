@@ -26,12 +26,12 @@
 
     <select id="listByStatus" parameterType="Map" resultType="Map">
         select c.id, c.postid, c.url, c.email, c.ip, c.content, c.creator, c.status, c.createTime, p.title, t.id as pid, t.creator as pcreator
-        from comment c left join post p on c.postid=p.id left join comment t on c.parent=t.id
+        from comment c left join tb_blog p on c.postid=p.id left join comment t on c.parent=t.id
         where c.status in <foreach collection="status" open="(" close=")" item="item" separator=",">#{item}</foreach> limit #{offset}, #{limit}
     </select>
 
     <select id="countByStatus" parameterType="Map" resultType="java.lang.Integer">
-        select count(1) from comment c left join post p on c.postid=p.id left join comment t on c.parent=t.id
+        select count(1) from comment c left join tb_blog p on c.postid=p.id left join comment t on c.parent=t.id
         where c.status in <foreach collection="status" open="(" close=")" item="item" separator=",">#{item}</foreach> limit #{offset}, #{limit}
     </select>
 

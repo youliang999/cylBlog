@@ -2,6 +2,8 @@ package com.cyl.blog.service.impl;
 
 import com.cyl.blog.controller.index.model.BlogVo;
 import com.cyl.blog.entity.*;
+import com.cyl.blog.entity.builder.BlogBuilder;
+import com.cyl.blog.entity.parse.BlogParse;
 import com.cyl.blog.plugin.PageIterator;
 import com.cyl.blog.service.BlogService;
 import com.cyl.blog.service.CategoryService;
@@ -10,7 +12,6 @@ import com.cyl.blog.service.UserService;
 import com.cyl.blog.service.handler.IndexHandler;
 import com.cyl.blog.service.mapper.BaseMapper;
 import com.cyl.blog.service.mapper.BlogContentMapper;
-import com.cyl.blog.service.mapper.BlogMapper;
 import com.cyl.blog.service.mapper.BlogV1Mapper;
 import com.cyl.blog.util.CollectionUtils;
 import com.cyl.blog.util.StringUtils;
@@ -35,8 +36,6 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     ///private static final ExecutorService executorService = Executors.newFixedThreadPool(50);
     private static final SimpleDateFormat datefo = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Autowired
-    private BlogMapper blogMapper;
-    @Autowired
     private CategoryService categoryService;
     @Autowired
     private TagService tagService;
@@ -54,24 +53,52 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         if(blog == null) {
             return false;
         }
-        blogMapper.insertBlog(blog);
-        log.info("===>>> insert id :{} ", blog.getId());
-        String id = blog.getId();
+        BlogV1 blogV1 = new BlogV1();
+        blogV1.setId(blog.getId());
+        blogV1.setTitle(blog.getTitle());
+        blogV1.setType(blog.getType());
+        blogV1.setParent(blog.getParent());
+        blogV1.setCategoryid(blog.getCategoryid());
+        blogV1.setPstatus(blog.getPstatus());
+        blogV1.setCstatus(blog.getCstatus());
+        blogV1.setCcount(blog.getCcount());
+        blogV1.setRcount(blog.getRcount());
+        blogV1.setCreator(blog.getCreator());
+        blogV1.setBlog_type(blog.getBlog_type());
+        blogV1.setCreateTime(blog.getCreateTime());
+        blogV1.setLastUpdate(blog.getLastUpdate());
+        blogV1Mapper.insertBlogV1(blogV1);
+        log.info("===>>> insert id :{} ", blogV1.getId());
+
+        BlogContent blogContent = new BlogContent();
+        blogContent.setBlog_id(Integer.valueOf(blogV1.getId()));
+        blogContent.setContent(StringUtils.isBlank(blog.getContent()) ? "" : blog.getContent());
+        blogContent.setExcerpt(StringUtils.isBlank(blog.getExcerpt()) ? "" : blog.getExcerpt());
+        blogContentMapper.insertBlogContent(blogContent);
+
+
+
+        String id = blogV1.getId();
         if(Integer.valueOf(id) > 0) {
-            Blog n = blogMapper.getBlogById(String.valueOf(id));
+            Blog n = getBlogById(String.valueOf(id));
             indexHandler.createHandle(n);
         }
         return Integer.valueOf(id) > 0;
     }
+
 
     @Override
     public boolean updateBlog(Blog blog) {
         if(blog == null) {
             return false;
         }
-        int id = blogMapper.update(blog);
+        BlogParse parse = new BlogParse(blog);
+        BlogV1  blogV1 = parse.parseBlogV1();
+        BlogContent blogContent = parse.parseBlogContent();
+        int id = blogV1Mapper.update(blogV1);
         if(id > 0) {
-            Blog n = blogMapper.getBlogById(String.valueOf(id));
+            blogContentMapper.update(blogContent);
+            Blog n = getBlogById(String.valueOf(id));
             indexHandler.updateHandle(n);
         }
         return id > 0;
@@ -82,18 +109,19 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         if(StringUtil.isEmpty(id)) {
             return false;
         }
-        blogMapper.deleteById(id);
+        blogV1Mapper.deleteById(id);
         indexHandler.deleteHandle(id);
         return true;
     }
 
-    @Override
-    public List<Blog> getBlogByCondition(int start, int limit) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("start", start);
-        map.put("limit", limit);
-        return  blogMapper.getBlogsByCondition(map);
-    }
+//    @Override
+//    public List<Blog> getBlogByCondition(int start, int limit) {
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("start", start);
+//        map.put("limit", limit);
+//        return  blogMapper.getBlogsByCondition(map);
+//    }
+
 
     public PageIterator<Blog> getBlogs(int page, int pageSize) {
         if(page <=0 || pageSize <= 0) {
@@ -105,7 +133,9 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         Map<String, Object> map = new HashMap<>();
         map.put("offset", (page-1)*pageSize);
         map.put("limit", pageSize);
-        List<Blog> blogs = blogMapper.getBlogs(map);
+        List<BlogV1> blogV1s = blogV1Mapper.getBlogs(map);
+        List<String> bids = blogV1s.stream().map(blogV1 -> blogV1.getId()).collect(Collectors.toList());
+        List<Blog> blogs = getBlogsByIds(bids);
         pageIterator.setData(blogs);
         return pageIterator;
     }
@@ -165,9 +195,8 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
 
     @Override
     public List<BlogVo> getBlogVoByIds(List<String> bids) {
-       List<Blog> blogs = blogMapper.getBlogsByIds(bids);
-       return Optional.ofNullable(blogs).orElse(Collections.emptyList())
-               .stream().map(blog -> makeBlogVo(blog)).collect(Collectors.toList());
+       List<Blog> blogs = getBlogsByIds(bids);
+        return makeBlogVOsByBlogs(blogs);
     }
 
     @Override
@@ -192,7 +221,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         if(CollectionUtils.isEmpty(categoryIds)) {
             return PageIterator.createInstance(page, pageSize, Collections.EMPTY_LIST);
         }
-        int count = blogMapper.countBlogIdsByCategory(categoryIds);
+        int count = blogV1Mapper.countBlogIdsByCategory(categoryIds);
         if(count <= 0) {
             return PageIterator.createInstance(page, pageSize, Collections.EMPTY_LIST);
         }
@@ -201,7 +230,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         data.put("list", categoryIds);
         data.put("offset", (page - 1)*pageSize);
         data.put("limit", pageSize);
-       List<BlogVo> blogVos =  Optional.ofNullable(blogMapper.getBlogIdsByCategory(data))
+       List<BlogVo> blogVos =  Optional.ofNullable(blogV1Mapper.getBlogIdsByCategory(data))
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(bid -> getBlogVo(bid))
@@ -213,7 +242,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     @Override
     public int getVisitCountByids(List<String> ids) {
         //log.info("==>>> ids:{}", new Gson().toJson(ids));
-        return Optional.ofNullable(blogMapper.getBlogsByIds(ids))
+        return Optional.ofNullable(blogV1Mapper.getBlogsByIds(ids))
                 .orElse(Collections.emptyList())
                 .stream()
                 .mapToInt(blog -> blog.getRcount())
@@ -221,36 +250,37 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     }
 
     public int countBlog() {
-        return blogMapper.countBlog();
+        return blogV1Mapper.countBlog();
     }
 
 
 
     @Override
     public BaseMapper getMapper() {
-        return blogMapper;
+        return blogV1Mapper;
     }
 
 
     private BlogVo getBlogVo(String bid) {
-       Blog blog = blogMapper.loadById(bid);
+       BlogV1 blog = blogV1Mapper.loadById(bid);
 //       log.info("====>>> blog:{} ", blog);
        blog.setId(bid);
        return makeBlogVo(blog);
     }
 
-    private BlogVo makeBlogVo(Blog blog) {
+    private BlogVo makeBlogVo(BlogV1 blog) {
         BlogVo blogVo = new BlogVo();
 
         // log.info("===>>> blog:{}", blog);
         if(blog != null) {
             Category category = categoryService.loadById(blog.getCategoryid());
             User user = userService.loadById(blog.getCreator());
+            BlogContent blogContent = blogContentMapper.getById(Integer.valueOf(blog.getId()));
             // log.info("===>>> category:{}", category);
             // log.info("===>>> user:{}", user);
             blogVo.setTitle(blog.getTitle())
-                    .setExcerpt(blog.getExcerpt())
-                    .setContent(blog.getContent())
+                    .setExcerpt(blogContent == null ? "" : blogContent.getExcerpt())
+                    .setContent(blogContent == null ? "" : blogContent.getContent())
                     .setType(blog.getType())
                     .setParent(blog.getParent())
                     .setCategoryid(blog.getCategoryid())
@@ -334,9 +364,66 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         }).collect(Collectors.toList());
     }
 
+    private List<BlogVo> makeBlogVOsByBlogs(List<Blog> blogs) {
+        List<Integer> bids = blogs.stream()
+                .map(blog -> Integer.valueOf(blog.getId()))
+                .collect(Collectors.toList());
+        List<String> uids = blogs.stream()
+                .map(blog -> blog.getCreator())
+                .collect(Collectors.toList());
+        List<String> cids = blogs.stream()
+                .map(blog -> blog.getCategoryid())
+                .collect(Collectors.toList());
+        log.info("===>>>bids:{} ", bids);
+        Map<Integer, BlogContent> contentMap = Optional.ofNullable(blogContentMapper.getByIds(bids))
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.toMap(BlogContent::getBlog_id, Function.identity(),  (u1, u2) -> u2));
+
+        Map<String, User> userMap = Optional.ofNullable(userService.getByUserIds(uids))
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.toMap(User::getId, Function.identity(),  (u1, u2) -> u2));
+        Map<String, Category> categoryMap = Optional.ofNullable(categoryService.getCategorysByids(cids))
+                .orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.toMap(Category::getId, Function.identity(),  (u1, u2) -> u2));
+//        Map<String, List<String>> tagsMap = Optional.ofNullable(tagService.getTags())
+        return blogs.stream().map(blog -> {
+            BlogVo blogVo = new BlogVo();
+            if(blog != null) {
+                Category category = categoryMap.get(blog.getCategoryid());
+                User user = userMap.get(blog.getCreator());
+                Integer id = Integer.valueOf(blog.getId());
+                BlogContent content = contentMap.get(id);
+                blogVo.setTitle(blog.getTitle())
+                        .setExcerpt(content == null ? "" : content.getExcerpt())
+                        .setContent(content == null ? "" : content.getContent())
+                        .setType(blog.getType())
+                        .setParent(blog.getParent())
+                        .setCategoryid(blog.getCategoryid())
+                        .setPstatus(blog.getPstatus())
+                        .setCstatus(blog.getCstatus())
+                        .setCcount(blog.getCcount())
+                        .setRcount(blog.getRcount())
+                        .setId(blog.getId())
+                        .setCreateTime(blog.getCreateTime())
+                        .setCreator(blog.getCreator())
+                        .setLastUpdate(blog.getLastUpdate());
+                if(category != null) {
+                    blogVo.setCategory(category);
+                }
+                if(user != null) {
+                    blogVo.setUser(user);
+                }
+            }
+            return blogVo;
+        }).collect(Collectors.toList());
+    }
+
     @Override
     public BlogVo getNextBlogVo(String id) {
-        String bid  = blogMapper.getNextBid(id);
+        String bid  = blogV1Mapper.getNextBid(id);
         if(StringUtil.isEmpty(bid)) {
             return new BlogVo();
         }
@@ -345,7 +432,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
 
     @Override
     public BlogVo getPrevBlogVo(String id) {
-        String bid = blogMapper.getPrevBid(id);
+        String bid = blogV1Mapper.getPrevBid(id);
         if(StringUtil.isEmpty(bid)) {
             return new BlogVo();
         }
@@ -354,7 +441,23 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
 
     @Override
     public List<Blog> getRecentBlogs(int limit) {
-        List<Blog> blogs = Optional.ofNullable(blogMapper.getRecentBlogs(limit))
+        List<BlogV1> blogV1s = blogV1Mapper.getRecentBlogs(limit);
+        List<String> bids = blogV1s.stream().map(blogV1 -> blogV1.getId()).collect(Collectors.toList());
+        List<Blog> blogs = Optional.ofNullable(getBlogsByIds(bids))
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(blog -> blog.setCreateDate(datefo.format(blog.getCreateTime())))
+                .collect(Collectors.toList());
+
+
+        return blogs;
+    }
+
+    @Override
+    public List<Blog> getBlogByTitle(String title) {
+        List<BlogV1> blogV1s = blogV1Mapper.getBlogByTitle(title);
+        List<String> bids = blogV1s.stream().map(blogV1 -> blogV1.getId()).collect(Collectors.toList());
+        List<Blog> blogs = Optional.ofNullable(getBlogsByIds(bids))
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(blog -> blog.setCreateDate(datefo.format(blog.getCreateTime())))
@@ -363,13 +466,23 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
     }
 
     @Override
-    public List<Blog> getBlogByTitle(String title) {
-        return blogMapper.getBlogByTitle(title);
+    public Blog getBlogById(String id) {
+       BlogV1 blogV1 =  blogV1Mapper.getById(Integer.valueOf(id));
+       BlogContent blogContent = blogContentMapper.getById(Integer.valueOf(id));
+       if(blogV1 == null) {
+           return null;
+       }
+       BlogBuilder blogBuilder = new BlogBuilder(blogV1);
+       if(blogContent == null) {
+           blogBuilder.withBlogContent(blogContent);
+       }
+       return blogBuilder.build();
     }
 
-    @Override
-    public Blog getBlogById(String id) {
-        return blogMapper.getBlogById(id);
+    public List<Blog> getBlogsByIds(List<String> ids) {
+        List<Blog> blogs = new ArrayList<>();
+        blogs = ids.stream().map(id -> getBlogById(id)).collect(Collectors.toList());
+        return blogs;
     }
 
 
@@ -380,7 +493,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
      * @param count
      */
     public int addCcount(String commentid, int count){
-        return blogMapper.addCcount(commentid, count);
+        return blogV1Mapper.addCcount(commentid, count);
     }
 
 

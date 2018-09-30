@@ -139,7 +139,7 @@ public class BlogHelper {
     public List<CommentVO> listRecent(){
         List<CommentVO> list = commentService.listRecent();
         for(CommentVO cvo : list){
-            Blog post = blogService.loadById(cvo.getPostid());
+            Blog post = blogService.getBlogById(cvo.getPostid());
             cvo.setCreateDate(datefo.format(cvo.getCreateTime()));
             cvo.setPost(post);
         }

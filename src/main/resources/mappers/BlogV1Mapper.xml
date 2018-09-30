@@ -2,10 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cyl.blog.service.mapper.BlogV1Mapper">
+    <resultMap id="result_map" type="com.cyl.blog.entity.BlogV1">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+    </resultMap>
 
     <insert id="insertBlogV1" parameterType="BlogV1">
         insert into tb_blog(id,title,type,parent,categoryid,pstatus,cstatus,ccount,rcount,createTime,creator, blog_type,lastUpdate)
         values(#{id},#{title},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blog_type},#{lastUpdate})
+        <selectKey keyProperty="id" resultType="java.lang.String">
+            select LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
     <select id="getById" parameterType="java.lang.Integer" resultType="BlogV1">
@@ -20,4 +27,92 @@
         SELECT * from tb_blog  order by lastUpdate desc limit #{offset}, #{limit}
     </select>
 
+    <select id="countBlog" resultType="java.lang.Integer">
+        SELECT count(1) from tb_blog where pstatus = 1
+    </select>
+
+    <select id="getNextBid" parameterType="java.lang.String" resultType="java.lang.String">
+        select id from tb_blog where type='post' and pstatus = 1  and createTime >
+        (select createTime from tb_blog where id=#{postid}) limit 1
+    </select>
+
+    <select id="getPrevBid" parameterType="java.lang.String" resultType="java.lang.String">
+        select id from tb_blog where type='post'  and pstatus = 1  and createTime &lt;
+        (select createTime from tb_blog where id=#{postid}) order by createTime desc limit 1
+    </select>
+
+    <select id="getRecentBlogs" parameterType="java.lang.Integer" resultType="BlogV1">
+        SELECT * from tb_blog where pstatus = 1 order by lastUpdate desc limit #{limit}
+    </select>
+
+    <select id="getBlogByTitle" parameterType="java.lang.String" resultType="BlogV1">
+        SELECT  * from tb_blog where title = #{title}
+    </select>
+
+    <select id="getBlogById" parameterType="java.lang.String" resultType="BlogV1">
+        SELECT * from tb_blog  where id = #{id}
+    </select>
+
+    <select id="getBlogsByIds" parameterType="java.util.List" resultType="BlogV1">
+        SELECT * from tb_blog  where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="countBlogIdsByCategory" parameterType="java.util.List" resultType="java.lang.Integer">
+        SELECT count(*) from tb_blog  where categoryid in
+        <foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getBlogIdsByCategory" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT id from tb_blog where categoryid in
+        <foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--base-->
+    <insert id="insert" parameterType="BlogV1">
+        insert into tb_blog(id,title,type,parent,categoryid,pstatus,cstatus,ccount,rcount,createTime,creator, blog_type,lastUpdate)
+        values(#{id},#{title},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blog_type},#{lastUpdate})
+        <selectKey keyProperty="id" resultType="java.lang.String">
+            select LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <insert id="insertBlog" parameterType="BlogV1">
+        insert into tb_blog(id,title,type,parent,categoryid,pstatus,cstatus,ccount,rcount,createTime,creator, blog_type,lastUpdate)
+        values(#{id},#{title},#{type},#{parent},#{categoryid},#{pstatus},#{cstatus},#{ccount},#{rcount},#{createTime},#{creator}, #{blog_type},#{lastUpdate})
+        <selectKey keyProperty="id" resultType="java.lang.String">
+            select LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <select id="loadById" parameterType="java.lang.String" resultType="BlogV1">
+        select * from tb_blog where id = #{id}
+    </select>
+
+    <select id="getlist" parameterType="Map" resultType="java.lang.String">
+        select id from tb_blog where pstatus = 1  order by lastUpdate desc limit #{offset}, #{limit}
+    </select>
+
+    <update id="deleteById" parameterType="java.lang.String">
+        UPDATE tb_blog set pstatus = -1 where id=#{id}
+    </update>
+
+    <update id="update" parameterType="BlogV1">
+        update tb_blog set title=#{title},parent=#{parent}, pstatus=#{pstatus},
+        <if test="categoryid!=null and categoryid!=''">
+            categoryid=#{categoryid},
+        </if>
+        cstatus=#{cstatus}, lastUpdate=#{lastUpdate}
+        where id=#{id}
+    </update>
+
+    <update id="addCcount">
+        update tb_blog set ccount=ccount+#{count} where id = (select postid from comment where id=#{commentid} and status='approve')
+    </update>
 </mapper>

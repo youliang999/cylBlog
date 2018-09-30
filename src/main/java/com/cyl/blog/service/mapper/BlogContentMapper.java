@@ -15,4 +15,6 @@ public interface BlogContentMapper {
 
     BlogContent getById(int id);
 
+    int update(BlogContent blogContent);
+
 }
