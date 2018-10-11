@@ -1,6 +1,6 @@
 <@page isBackend=true >
     <div class="col-sm-9 col-md-10 bdiv" >
-    <h3 class="page-header header">主菜单<small>Welcome to Cblog</small></h3>
+    <h3 class="page-header header">${currentUser.nickName!}<small>Welcome to Cblog</small></h3>
     <div class="row">
         <div class="col-sm-3 col-md-3">
             <div class="databox">

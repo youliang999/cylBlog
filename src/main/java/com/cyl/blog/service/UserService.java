@@ -7,6 +7,7 @@ import com.cyl.blog.plugin.PageIterator;
 import java.util.List;
 
 public interface UserService extends BlogBaseService{
+    boolean insertU(User user);
 
     PageIterator<User> list(int pageIndex, int pageSize);
 

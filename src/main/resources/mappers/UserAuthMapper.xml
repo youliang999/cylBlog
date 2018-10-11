@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.blog.service.mapper.UserAuthMapper">
+    <resultMap id="result_map" type="com.cyl.blog.entity.UserAuth">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertAuth" parameterType="UserAuth">
+        insert into tb_user_auth(userId, nickName, menuList, update_date, create_date)
+        VALUES (#{userId}, #{nickName}, #{menuList}, now(), now())
+
+        <selectKey keyProperty="id" resultType="INTEGER">
+            select LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <select id="getByUid" parameterType="java.lang.String" resultType="UserAuth">
+        SELECT * from tb_user_auth where userId = #{uid}
+    </select>
+
+    <select id="getByUName" parameterType="java.lang.String" resultType="UserAuth">
+        SELECT * from tb_user_auth where nickName = #{nickName}
+    </select>
+
+    <update id="updateAuth" parameterType="UserAuth">
+        update tb_user_auth SET
+         nickName = #{nickName},
+         menuList = #{menuList},
+         update_date = now()
+         where
+         userId = #{userId}
+    </update>
+
+    <delete id="deleteAuth" parameterType="java.lang.String">
+        delete from tb_user_auth where userId = #{userId}
+    </delete>
+
+</mapper>

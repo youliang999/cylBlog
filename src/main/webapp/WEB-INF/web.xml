@@ -67,6 +67,22 @@
     <async-supported>true</async-supported>
   </filter>
 
+  <filter>
+    <filter-name>xssFilter</filter-name>
+    <filter-class>com.cyl.blog.filter.XssFilter</filter-class>
+    <init-param>
+      <param-name>excludeUrls</param-name>
+      <param-value>
+        /backend/posts/**
+      </param-value>
+    </init-param>
+
+  </filter>
+  <filter-mapping>
+    <filter-name>xssFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>CylBlog</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

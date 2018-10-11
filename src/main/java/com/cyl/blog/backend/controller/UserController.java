@@ -57,6 +57,7 @@ public class UserController extends BaseController{
     @RequiresRoles("admin")
     public String insert(User user, String repass, Model model){
         Map<String, Object> form = UserFormValidator.validateInsert(user, repass);
+        log.info("===>>> form:{}", new Gson().toJson(form));
         if(!form.isEmpty()){
             model.addAllAttributes(form);
             return "backend/new/user-edit";

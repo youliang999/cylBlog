@@ -1,16 +1,18 @@
 package com.cyl.blog.backend.controller;
 
+import com.cyl.blog.backend.enums.IconTypeEnum;
 import com.cyl.blog.backend.helper.OptionHelper;
+import com.cyl.blog.backend.vo.MenuVO;
 import com.cyl.blog.constants.Constants;
 import com.cyl.blog.controller.BaseController;
 import com.cyl.blog.controller.helper.BlogHelper;
+import com.cyl.blog.entity.Menu;
 import com.cyl.blog.entity.User;
+import com.cyl.blog.entity.UserAuth;
 import com.cyl.blog.helper.CookieRemberManager;
 import com.cyl.blog.helper.FunctionHelper;
 import com.cyl.blog.helper.WebContextFactory;
-import com.cyl.blog.service.BlogService;
-import com.cyl.blog.service.CommentService;
-import com.cyl.blog.service.UserService;
+import com.cyl.blog.service.*;
 import com.cyl.blog.shiro.StatelessToken;
 import com.cyl.blog.util.CookieUtil;
 import com.cyl.blog.util.ServletUtils;
@@ -30,8 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by youliang.cheng on 2018/9/4.
@@ -50,24 +51,91 @@ public class BackendController extends BaseController{
     OptionHelper optionHelper;
     @Autowired
     BlogHelper blogHelper;
+    @Autowired
+    private MenuService menuService;
+    @Autowired
+    private UserAuthService userAuthService;
 
 
     @RequiresRoles(value = { "admin", "editor" }, logical = Logical.OR)
     @RequestMapping(value = "/index")
     public ModelAndView index(){
         ModelAndView mv = new ModelAndView("backend/new/index");
+        User user = getUser();
+        if(user==null) {
+            return mv;
+        }
+        UserAuth userAuth = userAuthService.getByUName(user.getNickName());
+        if(userAuth == null) {
+            mv.setViewName("backend/noAuth");
+        }
+        List<String> authMenus = userAuth == null ? Collections.EMPTY_LIST : Arrays.asList(userAuth.getMenuList().split(","));
+        List<Menu> menus = menuService.getAllMenu();
+        List<MenuVO> authedMenus = new ArrayList<>();
+        menus.stream().forEach(menu -> {
+            MenuVO authMenu = new MenuVO();
+            authMenu.setMid(menu.getMid());
+            authMenu.setMname(menu.getMname());
+            authMenu.setMurl(menu.getMurl());
+            authMenu.setParentMid(menu.getParentMid());
+            authMenu.setCreateDate(menu.getCreateDate());
+            authMenu.setUpdateDate(menu.getUpdateDate());
+            authMenu.setIconstyle(IconTypeEnum.getIcon(menu.getMid()));
+            if(authMenus.contains(menu.getMid())) {
+                authedMenus.add(authMenu);
+            }
+        });
+//        mv.addObject("menus", authedMenus);
+        String s = makeHtml(authedMenus);
+        log.info("===>>> htmL: ", s);
+        mv.addObject("html", s);
         return mv;
+    }
+
+    private String makeHtml(List<MenuVO> menuVOS) {
+        String domain = getGlobal().getDomain();
+        StringBuffer html = new StringBuffer();
+        for(MenuVO menuVO : menuVOS) {
+//            log.info("menuVO:{}",menuVO );
+            if(menuVO.getParentMid().equalsIgnoreCase("root")) {
+                html.append("\r\n <dl id=" + menuVO.getMid() + ">" );
+                html.append("\r\n <dt><i class=\"Hui-iconfont\">" + menuVO.getIconstyle() +"</i>" +menuVO.getMname() +"<i class=\"Hui-iconfont menu_dropdown-arrow\">&#xe6d5;</i></dt>");
+                if(hasChildren(menuVO.getMid(), menuVOS)) {
+                    html.append("\r\n <dd>");
+                    html.append("\r\n <ul>");
+                    for(MenuVO children : menuVOS) {
+                        if(children.getParentMid().equalsIgnoreCase(menuVO.getMid())) {
+                            html.append("\r\n <li><a data-href=\"" +domain + children.getMurl()+ "\" id=\"welcome\"  data-title=\"" + children.getMname()+ "\" href=\"javascript:void(0)\">" + children.getMname()+ "</a></li>");
+                        }
+                    }
+                    html.append("\r\n </ul>");
+                    html.append("\r\n </dd>");
+                }
+                html.append("\r\n </dl>");
+            }
+//            log.info("===>>> html:{}", html);
+        }
+        return html.toString();
+    }
+
+    private boolean hasChildren(String mid, List<MenuVO> menuVOS) {
+        for(MenuVO menuVO : menuVOS) {
+            if(menuVO.getParentMid().equalsIgnoreCase(mid)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @RequiresRoles(value = { "admin", "editor" }, logical = Logical.OR)
     @RequestMapping("/welcome")
     public ModelAndView welcome() {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         ModelAndView mv = new ModelAndView("/backend/new/welcome");
 
         mv.addObject("osInfo", optionHelper.getOsInfo());
 //        log.info("===>>> osInfo cost {} ms", System.currentTimeMillis() - start);
-        long start1 = System.currentTimeMillis();
+//        long start1 = System.currentTimeMillis();
         blogHelper.getBaseInfo(mv);
 //        log.info("===>>> getBaseInfo cost {} ms", System.currentTimeMillis() - start1);
 //        log.info("===>>> welcome cost {} ms", System.currentTimeMillis() - start);
@@ -78,8 +146,10 @@ public class BackendController extends BaseController{
 
     @RequestMapping(value = "/login")
     public ModelAndView login(String msg,
+                              @RequestParam(value = "nickName", required = false, defaultValue = "") String nickName,
                               @RequestParam(value = "loginInterceptorUrl", required = false, defaultValue = "") String requestUrl){
-        ModelAndView mv = new ModelAndView("backend/login-new");
+        ModelAndView mv = new ModelAndView("backend/login-1/index");
+        mv.addObject("nickName", nickName);
         log.info("get type login =============>");
         cookieFunction(mv);
         if(WebContextFactory.get().isLogon() && !StringUtils.isBlank(requestUrl)) {

@@ -4,6 +4,7 @@
             <li><a href="index.html">首页</a>
                 <ul>
                     <li><a href="${g.domain}/backend/login">登录</a></li>
+                    <li><a href="${g.domain}/register" target="_blank">注册</a></li>
                 </ul>
             </li>
 

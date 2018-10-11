@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.blog.service.mapper.MenuMapper">
+
+    <insert id="insertMenu" parameterType="Menu">
+        INSERT into tb_menu_list(mid, parentMid, mname, murl, update_date, create_date)
+        VALUES (#{mid}, #{parentMid}, #{mname}, #{murl}, now(), now())
+    </insert>
+
+    <select id="getByMid" parameterType="java.lang.String" resultType="Menu">
+        select * from tb_menu_list where mid = #{mid}
+    </select>
+
+    <select id="getAllMenu" resultType="Menu">
+        SELECT * from tb_menu_list
+    </select>
+
+    <update id="updateMenu" parameterType="Menu">
+        UPDATE tb_menu_list set mname = #{mname},
+        parentMid = #{parentMid},
+        murl =#{murl},
+        update_date = now()
+        where mid = #{mid}
+    </update>
+
+    <delete id="deleteByMid" parameterType="java.lang.String">
+        DELETE FROM  tb_menu_list where mid = #{mid}
+    </delete>
+
+
+</mapper>

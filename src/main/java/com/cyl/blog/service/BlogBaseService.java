@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface BlogBaseService {
 
+        /**
+         *
+         * ==>> BlogService.insertBlog(Blog blog);
+         */
+        @Deprecated
         <T extends BaseBlog> int insert(T t);
 
 

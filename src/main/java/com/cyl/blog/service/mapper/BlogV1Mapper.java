@@ -36,4 +36,6 @@ public interface BlogV1Mapper extends BaseMapper{
     List<BlogV1> getBlogByTitle(String title);
 
     int addCcount(@Param("commentid") String commentid, @Param("count") int count);
+
+    int phydeleteById(String id);
 }

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 评论业务对象
  * 
- * @author zhou
+ * @author
  *
  */
 @ToString

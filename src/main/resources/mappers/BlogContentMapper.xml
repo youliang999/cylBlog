@@ -18,4 +18,13 @@
     <select id="getById" parameterType="java.lang.Integer" resultType="BlogContent">
         SELECT * from tb_blog_content where blog_id = #{id}
     </select>
+
+    <update id="update" parameterType="BlogContent">
+        update tb_blog_content set excerpt=#{excerpt},content=#{content}
+        where blog_id=#{blog_id}
+    </update>
+
+    <update id="deleteById" parameterType="java.lang.String">
+        delete from tb_blog_content where blog_id=#{id}
+    </update>
 </mapper>

@@ -26,7 +26,7 @@ public class UserIsLoginInterceptor extends  AbstractDetectingUrlInterceptor {
                 LOG.info("request url(): {}"+request.getRequestURI());
                 response.sendRedirect("/backend/login?loginInterceptorUrl=" + request.getRequestURI());
             }
-            LOG.info("SessionBindInterceptor user is null.");
+            LOG.info(" user is null.");
             return true;
         } else {
             LOG.info("===>>> user :{} is login", user.getNickName());

@@ -115,4 +115,8 @@
     <update id="addCcount">
         update tb_blog set ccount=ccount+#{count} where id = (select postid from comment where id=#{commentid} and status='approve')
     </update>
+
+    <update id="phydeleteById" parameterType="java.lang.String">
+        delete from tb_blog where id=#{id}
+    </update>
 </mapper>

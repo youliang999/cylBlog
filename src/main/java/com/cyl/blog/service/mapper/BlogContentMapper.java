@@ -17,4 +17,6 @@ public interface BlogContentMapper {
 
     int update(BlogContent blogContent);
 
+    int deleteById(String id);
+
 }

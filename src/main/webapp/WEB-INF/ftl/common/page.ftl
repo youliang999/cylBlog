@@ -1,8 +1,10 @@
 <#include "assets.ftl" />
 <#assign isBackend=false>
+<#assign isRegister=false>
 <#macro page
 title="大街网_年轻人专属的社交招聘平台！"
 isBackend=false
+isRegister=false
 assets=[]
 static={}
 useheader="default"
@@ -41,7 +43,12 @@ linkExtend=[]>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="robots" content="nofollow" />
     <script src="${g.domain}/resource/js/zblog.js"></script>
+    <script src="${g.domain}/resource/js/jquery.form.js"></script>
     <#if !isBackend>
+        <#if isRegister>
+            <link rel="stylesheet" href="${g.domain}/resource/bootstrap-3.3.1/css/bootstrap.min.css">
+            <link rel="stylesheet" href="${g.domain}/resource/css/backend.css">
+        </#if>
         <title>CYL-BLOG</title>
     <#else >
         <title>${g.title} Admin</title>
@@ -71,9 +78,12 @@ linkExtend=[]>
         </div>
     </div>
 </body>
+<#if !isRegister>
     <#if !isBackend>
         <#include "head.ftl"/>
     </#if>
+</#if>
+
 </head>
 </html>
 </#macro>

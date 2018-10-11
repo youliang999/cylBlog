@@ -112,6 +112,7 @@
     </bean>
 
     <mvc:interceptors>
+        <bean class="com.cyl.blog.interceptors.XssPathVarInterceptor"/>
         <mvc:interceptor>
         <mvc:mapping path="/backend/**"/>
         <bean class="com.cyl.blog.interceptors.UserIsLoginInterceptor">

@@ -98,7 +98,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         int id = blogV1Mapper.update(blogV1);
         if(id > 0) {
             blogContentMapper.update(blogContent);
-            Blog n = getBlogById(String.valueOf(id));
+            Blog n = getBlogById(blogV1.getId());
             indexHandler.updateHandle(n);
         }
         return id > 0;
@@ -109,7 +109,8 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
         if(StringUtil.isEmpty(id)) {
             return false;
         }
-        blogV1Mapper.deleteById(id);
+        blogV1Mapper.phydeleteById(id);
+        blogContentMapper.deleteById(id);
         indexHandler.deleteHandle(id);
         return true;
     }
@@ -473,7 +474,7 @@ public class BlogServiceImpl extends BlogBaseServiceImpl implements BlogService 
            return null;
        }
        BlogBuilder blogBuilder = new BlogBuilder(blogV1);
-       if(blogContent == null) {
+       if(blogContent != null) {
            blogBuilder.withBlogContent(blogContent);
        }
        return blogBuilder.build();
