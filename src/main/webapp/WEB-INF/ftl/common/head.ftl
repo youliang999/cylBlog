@@ -16,7 +16,7 @@
     font-weight: bold;
     line-height: 100%;
     margin: 62px 0 5px 4%;
-"><a href="">Cblog - youliang.cheng</a></h1>
+"><a href="/">Cblog - youliang.cheng</a></h1>
     <h2 id="tagline">just another cblog website</h2>
 </div>
 

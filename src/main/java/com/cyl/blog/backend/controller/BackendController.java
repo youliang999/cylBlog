@@ -59,7 +59,7 @@ public class BackendController extends BaseController{
 
     @RequiresRoles(value = { "admin", "editor" }, logical = Logical.OR)
     @RequestMapping(value = "/index")
-    public ModelAndView index(){
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response){
         ModelAndView mv = new ModelAndView("backend/new/index");
         User user = getUser();
         if(user==null) {
@@ -67,6 +67,13 @@ public class BackendController extends BaseController{
         }
         UserAuth userAuth = userAuthService.getByUName(user.getNickName());
         if(userAuth == null) {
+            CookieRemberManager.logout(request, response);
+            SecurityUtils.getSubject().logout();
+            CookieUtil cookieUtil = new CookieUtil(request, response);
+            cookieUtil.removeCokie(Constants.COOKIE_CSRF_TOKEN);
+            cookieUtil.removeCokie("comment_author");
+            cookieUtil.removeCokie("comment_author_email");
+            cookieUtil.removeCokie("comment_author_url");
             mv.setViewName("backend/noAuth");
         }
         List<String> authMenus = userAuth == null ? Collections.EMPTY_LIST : Arrays.asList(userAuth.getMenuList().split(","));

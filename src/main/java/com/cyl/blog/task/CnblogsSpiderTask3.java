@@ -106,6 +106,9 @@ public class CnblogsSpiderTask3 {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    spiderQueue.isEmpty();
+                    spiderQueue.size();
 //
          MySpiderUtil.serializeObject(spiderQueue, "src/main/resources/cnblogs-proxies-mysql)");
 
@@ -120,6 +123,7 @@ public class CnblogsSpiderTask3 {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+
 
 
 

@@ -11,17 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by youliang.cheng on 2018/9/14.
  */
 public class VisitRecordInterceptor extends AbstractDetectingUrlInterceptor  {
-    private static final ExecutorService executorService = new ThreadPoolExecutor(10, 10, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
-    private static final Logger LOG = LoggerFactory.getLogger(SessionBindInterceptor.class);
+   // private static final ExecutorService executorService = new ThreadPoolExecutor(10, 10, 0, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
+    private static final Logger LOG = LoggerFactory.getLogger(VisitRecordInterceptor.class);
     @Autowired
     private VisitService visitService;
 
@@ -36,9 +32,9 @@ public class VisitRecordInterceptor extends AbstractDetectingUrlInterceptor  {
         visitInfo.setCookie(cookie);
         visitInfo.setVisitUrl(visitUrl);
         visitInfo.setVisitDate(visitDate);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
+       // executorService.submit(new Runnable() {
+         //   @Override
+           // public void run() {
                 try {
                     Thread.sleep(100);
                     visitService.insertVisitRecord(visitInfo);
@@ -47,8 +43,8 @@ public class VisitRecordInterceptor extends AbstractDetectingUrlInterceptor  {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-        });
+          //  }
+      //  });
         return true;
     }
 

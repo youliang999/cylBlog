@@ -42,6 +42,12 @@ public class IndexController extends BaseController{
     private BlogIndexService blogIndexService;
 
     @RequestMapping("/")
+    public ModelAndView searchindex(){
+        ModelAndView mv = new ModelAndView("/search");
+        return mv;
+    }
+
+    @RequestMapping("/blog/index")
     public ModelAndView index1(){
         ModelAndView mv = new ModelAndView("index/index");
         getIndexPage(1, mv);

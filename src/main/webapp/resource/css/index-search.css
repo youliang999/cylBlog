@@ -1,0 +1,139 @@
+a:hover {
+    text-decoration: none;
+}
+
+#journal {
+    margin-top: 40px;
+}
+
+/*         #journal h1 {
+            font: normal 20px/36px 'Arial Normal', 'Arial';
+            text-indent: 20px;
+            border-bottom: 1px solid black;
+        } */
+
+#form {
+    /* padding: 20px; */
+    min-width: 450px;
+    padding-bottom: 0;
+}
+
+.form-p-one {
+    margin-bottom: 20px;
+}
+
+.form-p-one input {
+    height: 40px;
+    width: 450px;
+}
+
+input[type="submit"] {
+    height: auto;
+    width: auto;
+    padding: 4px 10px;
+    margin-left: 6px;
+}
+
+thead {
+    background: #ccc;
+}
+
+thead td {
+    font: normal 13px/30px 'Arial Normal', 'Arial';
+}
+
+tbody td {
+    padding: 10px;
+    word-break: break-all;
+    font-size: 13px;
+}
+
+.copy-btn-p input {
+    padding: 4px 6px;
+}
+
+#J_job_box table {
+    margin: auto;
+    text-align: left;
+}
+
+#J_job_box table tbody tr td img {
+    vertical-align: middle;
+}
+.search-box {
+    margin: 0 auto;
+    /* width: 624px; */
+    position: relative;
+}
+.logo{
+    height: 100%;
+    min-height: 150px;
+    position: relative;
+}
+.search-btn{
+    height: 45px;
+    margin-left: -3px;
+    width: 57px;
+}
+.search-tip {
+    /* margin-left: 158px; */
+    /* width: 837px; */
+    /* float: left; */
+    height: 20px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #999;
+}
+
+.search-tip a {
+    /* color: #00b6d7; */
+    margin-left: 20px;
+    display: inline-block;
+}
+.search-div {
+    width: 624px;
+    /* float: left; */
+    height: auto;
+    margin:0 auto;
+}
+
+/*.footer{*/
+    /*clear: both;*/
+    /*display: block;*/
+    /*text-align: center;*/
+    /*margin: 0px auto;*/
+    /*position: absolute;*/
+    /*bottom: 100px;*/
+    /*width: 100%;*/
+/*}*/
+
+.footer{
+    clear: both;
+    display: block;
+    text-align: center;
+    margin: 0px auto;
+    position: relative;
+    /* bottom: 100px; */
+    width: 100%;
+    margin-top: 330px;
+}
+
+.about {
+    margin: 0 auto;
+}
+.abouta1 {
+    font-size:10px;
+    text-align:center;
+}
+.abouta {
+    text-align:center;
+    border-bottom: 1px solid black;
+}
+
+.menu-right a {
+    color:black;
+    text-decoration:none;
+    color: #555;
+    margin-right:10px;
+    font-size:15px;
+}
